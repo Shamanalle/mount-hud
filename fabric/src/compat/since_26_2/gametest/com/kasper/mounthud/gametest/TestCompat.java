@@ -2,6 +2,7 @@ package com.kasper.mounthud.gametest;
 
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 /** Test calls that differ between Minecraft versions. */
 final class TestCompat {
@@ -24,5 +25,10 @@ final class TestCompat {
     static void guiScale(Minecraft mc, int scale) {
         mc.options.guiScale().set(scale);
         mc.resizeGui();
+    }
+
+    /** The open screen, or null. */
+    static Screen screen(Minecraft mc) {
+        return mc.gui.screen();
     }
 }

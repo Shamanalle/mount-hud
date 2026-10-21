@@ -1,6 +1,7 @@
 package com.kasper.mounthud.client;
 
 import com.kasper.mounthud.MountHud;
+import com.kasper.mounthud.compat.Screens;
 import com.kasper.mounthud.compat.Widgets;
 import com.kasper.mounthud.config.HeartsPosition;
 import com.kasper.mounthud.config.JumpBarMode;
@@ -68,7 +69,7 @@ public final class SettingsScreen extends Screen {
         int half = (WIDTH - 4) / 2;
         addRenderableWidget(Button.builder(Component.translatable("mounthud.settings.reset"), button -> {
             MountHud.apply(new Settings());
-            minecraft.setScreen(new SettingsScreen(parent));
+            Screens.open(minecraft, new SettingsScreen(parent));
         }).bounds(x, y, half, 20).build());
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
                 .bounds(x + WIDTH - half, y, half, 20).build());
@@ -81,6 +82,6 @@ public final class SettingsScreen extends Screen {
     @Override
     public void onClose() {
         MountHud.apply(settings);
-        minecraft.setScreen(parent);
+        Screens.open(minecraft, parent);
     }
 }

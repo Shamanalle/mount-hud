@@ -143,7 +143,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
         context.takeScreenshot(lang + "_settings");
         context.clickScreenButton(context.computeOnClient(mc -> I18n.get("gui.done")));
         context.waitTicks(2);
-        expect(context.computeOnClient(mc -> mc.screen == null), "Done did not close the settings screen");
+        expect(context.computeOnClient(mc -> TestCompat.screen(mc) == null), "Done did not close the settings screen");
         expect(MountHud.settings().equals(new Settings()), "Reset did not restore the default settings");
     }
 
