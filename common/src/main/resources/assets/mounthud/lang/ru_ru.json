@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Настройки Mount HUD",
+  "mounthud.settings.reset": "Сбросить",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Если выключить, интерфейс будет как в ванили.",
+  "mounthud.option.hunger_while_riding": "Голод верхом",
+  "mounthud.option.hunger_while_riding.tooltip": "Показывать полоску голода верхом на лошади, свинье, верблюде или страйдере вместе с сердцами животного.",
+  "mounthud.option.hearts_position": "Сердца животного",
+  "mounthud.option.hearts_position.tooltip": "Где рисовать сердца животного, пока видна полоска голода.",
+  "mounthud.option.hearts_position.above_hunger": "Над голодом",
+  "mounthud.option.hearts_position.left": "Слева, над бронёй",
+  "mounthud.option.jump_bar": "Полоска прыжка",
+  "mounthud.option.jump_bar.tooltip": "Когда полоска опыта сменяется полоской прыжка верхом на лошади или верблюде.",
+  "mounthud.option.jump_bar.auto": "Пока заряжаешь",
+  "mounthud.option.jump_bar.always_jump": "Всегда (как в ванили)",
+  "mounthud.option.jump_bar.always_experience": "Никогда"
+}

@@ -1,0 +1,44 @@
+// The Fabric (and Quilt) jar of one Minecraft version. Up to 1.21.11 Minecraft is obfuscated: Loom compiles against
+// Mojang's names and remaps the jar to Fabric's intermediary names (remapJar). 26.x is not obfuscated and is used as
+// it is.
+def unobfuscated = rootProject.unobfuscated
+apply plugin: unobfuscated ? 'net.fabricmc.fabric-loom' : 'fabric-loom'
+apply from: "${rootDir}/gradle/sources.gradle"
+
+repositories {
+    maven {
+        name = 'TerraformersMC'
+        url = 'https://maven.terraformersmc.com/releases'
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    if (unobfuscated) {
+        implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+        implementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+        // Mod Menu is optional: compiled against, and in the dev client only
+        compileOnly "com.terraformersmc:modmenu:${rootProject.modmenu}"
+        localRuntime "com.terraformersmc:modmenu:${rootProject.modmenu}"
+    } else {
+        mappings loom.officialMojangMappings()
+        modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+        modCompileOnly("com.terraformersmc:modmenu:${rootProject.modmenu}") { transitive = false }
+        modLocalRuntime("com.terraformersmc:modmenu:${rootProject.modmenu}") { transitive = false }
+    }
+}
+
+processResources {
+    def versions = released.versions
+    def minecraftRange = versions.size() == 1 ? versions[0] : ">=${versions.first()} <=${versions.last()}"
+    def props = [version: project.version, minecraft_range: minecraftRange, java_version: rootProject.java_version,
+                 loader_min: rootProject.loader_min]
+    inputs.properties props
+    filesMatching('fabric.mod.json') {
+        expand props
+    }
+}
+
+// The jar a release takes: remapped up to 1.21.11, the plain jar for 26.x
+ext.releaseJarTask = unobfuscated ? 'jar' : 'remapJar'

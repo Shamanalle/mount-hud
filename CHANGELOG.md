@@ -1,0 +1,19 @@
+# Changelog
+
+All notable changes to this project are documented in this file. Each version is described in English first, then in Russian.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+*Все заметные изменения проекта описываются в этом файле. Каждая версия описана сначала на английском, затем на русском.*
+
+## [Unreleased]
+
+### English
+
+#### Added
+- First version in development: hunger and the mount's hearts at the same time while riding, and the experience bar that turns into the jump bar only while you charge a jump.
+
+### Русский
+
+#### Добавлено
+- Первая версия в разработке: голод и сердца животного одновременно при езде, а полоска опыта сменяется полоской прыжка, только пока вы заряжаете прыжок.

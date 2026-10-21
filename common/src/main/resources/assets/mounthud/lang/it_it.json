@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Impostazioni di Mount HUD",
+  "mounthud.settings.reset": "Ripristina",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Disattivato torna l'interfaccia originale.",
+  "mounthud.option.hunger_while_riding": "Fame in sella",
+  "mounthud.option.hunger_while_riding.tooltip": "Mantiene la barra della fame in sella a cavallo, maiale, cammello o strider insieme ai cuori della cavalcatura.",
+  "mounthud.option.hearts_position": "Cuori della cavalcatura",
+  "mounthud.option.hearts_position.tooltip": "Dove vanno i cuori della cavalcatura mentre si vede la barra della fame.",
+  "mounthud.option.hearts_position.above_hunger": "Sopra la fame",
+  "mounthud.option.hearts_position.left": "A sinistra, sopra l'armatura",
+  "mounthud.option.jump_bar": "Barra del salto",
+  "mounthud.option.jump_bar.tooltip": "Quando la barra dell'esperienza diventa la barra del salto in sella a cavallo o cammello.",
+  "mounthud.option.jump_bar.auto": "Durante la carica",
+  "mounthud.option.jump_bar.always_jump": "Sempre (originale)",
+  "mounthud.option.jump_bar.always_experience": "Mai"
+}

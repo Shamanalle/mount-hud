@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Mount HUD 설정",
+  "mounthud.settings.reset": "기본값으로 초기화",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "끄면 기본 HUD로 돌아갑니다.",
+  "mounthud.option.hunger_while_riding": "탑승 중 배고픔",
+  "mounthud.option.hunger_while_riding.tooltip": "말, 돼지, 낙타, 스트라이더를 탄 동안에도 탈것의 체력과 함께 배고픔 막대를 표시합니다.",
+  "mounthud.option.hearts_position": "탈것 체력",
+  "mounthud.option.hearts_position.tooltip": "배고픔 막대가 보일 때 탈것의 하트를 어디에 표시할지 정합니다.",
+  "mounthud.option.hearts_position.above_hunger": "배고픔 위",
+  "mounthud.option.hearts_position.left": "왼쪽, 방어력 위",
+  "mounthud.option.jump_bar": "점프 막대",
+  "mounthud.option.jump_bar.tooltip": "말이나 낙타를 탈 때 경험치 막대가 점프 막대로 바뀌는 때.",
+  "mounthud.option.jump_bar.auto": "충전하는 동안",
+  "mounthud.option.jump_bar.always_jump": "항상 (기본)",
+  "mounthud.option.jump_bar.always_experience": "표시 안 함"
+}

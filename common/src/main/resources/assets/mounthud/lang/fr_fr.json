@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Paramètres de Mount HUD",
+  "mounthud.settings.reset": "Réinitialiser",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Désactivé, l'interface redevient celle du jeu de base.",
+  "mounthud.option.hunger_while_riding": "Faim à cheval",
+  "mounthud.option.hunger_while_riding.tooltip": "Garde la barre de faim en chevauchant un cheval, un cochon, un dromadaire ou un arpenteur, avec les cœurs de la monture.",
+  "mounthud.option.hearts_position": "Cœurs de la monture",
+  "mounthud.option.hearts_position.tooltip": "Où vont les cœurs de la monture quand la barre de faim est affichée.",
+  "mounthud.option.hearts_position.above_hunger": "Au-dessus de la faim",
+  "mounthud.option.hearts_position.left": "À gauche, au-dessus de l'armure",
+  "mounthud.option.jump_bar": "Barre de saut",
+  "mounthud.option.jump_bar.tooltip": "Quand la barre d'expérience devient la barre de saut sur un cheval ou un dromadaire.",
+  "mounthud.option.jump_bar.auto": "Pendant la charge",
+  "mounthud.option.jump_bar.always_jump": "Toujours (jeu de base)",
+  "mounthud.option.jump_bar.always_experience": "Jamais"
+}

@@ -1,0 +1,28 @@
+# Gradle & build output
+.gradle/
+build/
+bin/
+out/
+.kotlin/
+
+# IDE & editor files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# Minecraft dev runs
+run/
+runs/
+logs/
+
+# Python
+__pycache__/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[46,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/Shamanalle/mount-hud/issues"
+
+[[mods]]
+modId = "mounthud"
+version = "${version}"
+displayName = "Mount HUD"
+displayURL = "https://github.com/Shamanalle/mount-hud"
+logoFile = "assets/mounthud/icon.png"
+authors = "Shamanalle"
+description = '''
+Hunger and your mount's health at the same time while riding, and the experience bar that turns into the jump bar only while you charge a jump.
+'''
+# Only on the client: servers and other players do not need it
+displayTest = "IGNORE_ALL_VERSION"
+
+[[dependencies.mounthud]]
+modId = "forge"
+mandatory = true
+versionRange = "[46,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.mounthud]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${minecraft_range}"
+ordering = "NONE"
+side = "CLIENT"

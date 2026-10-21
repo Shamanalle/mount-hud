@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Налаштування Mount HUD",
+  "mounthud.settings.reset": "Скинути",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Якщо вимкнути, інтерфейс буде як у ванілі.",
+  "mounthud.option.hunger_while_riding": "Голод верхи",
+  "mounthud.option.hunger_while_riding.tooltip": "Показувати смужку голоду верхи на коні, свині, верблюді чи страйдері разом із серцями тварини.",
+  "mounthud.option.hearts_position": "Серця тварини",
+  "mounthud.option.hearts_position.tooltip": "Де малювати серця тварини, поки видно смужку голоду.",
+  "mounthud.option.hearts_position.above_hunger": "Над голодом",
+  "mounthud.option.hearts_position.left": "Ліворуч, над бронею",
+  "mounthud.option.jump_bar": "Смужка стрибка",
+  "mounthud.option.jump_bar.tooltip": "Коли смужка досвіду змінюється смужкою стрибка верхи на коні чи верблюді.",
+  "mounthud.option.jump_bar.auto": "Поки заряджаєш",
+  "mounthud.option.jump_bar.always_jump": "Завжди (як у ванілі)",
+  "mounthud.option.jump_bar.always_experience": "Ніколи"
+}

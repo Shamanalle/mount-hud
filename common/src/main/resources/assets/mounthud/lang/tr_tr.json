@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Mount HUD Ayarları",
+  "mounthud.settings.reset": "Varsayılana döndür",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Kapalıyken arayüz oyunun kendi hâline döner.",
+  "mounthud.option.hunger_while_riding": "Binerken açlık",
+  "mounthud.option.hunger_while_riding.tooltip": "At, domuz veya deveye binerken açlık çubuğunu bineğin canıyla birlikte gösterir.",
+  "mounthud.option.hearts_position": "Bineğin kalpleri",
+  "mounthud.option.hearts_position.tooltip": "Açlık çubuğu görünürken bineğin kalplerinin yeri.",
+  "mounthud.option.hearts_position.above_hunger": "Açlığın üstünde",
+  "mounthud.option.hearts_position.left": "Solda, zırhın üstünde",
+  "mounthud.option.jump_bar": "Zıplama çubuğu",
+  "mounthud.option.jump_bar.tooltip": "At veya deveye binerken deneyim çubuğunun zıplama çubuğuna ne zaman dönüştüğü.",
+  "mounthud.option.jump_bar.auto": "Zıplama doldurulurken",
+  "mounthud.option.jump_bar.always_jump": "Her zaman (oyunun kendisi)",
+  "mounthud.option.jump_bar.always_experience": "Asla"
+}

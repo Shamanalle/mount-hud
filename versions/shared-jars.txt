@@ -1,0 +1,9 @@
+# Minecraft versions released as one jar: one group per line, "<loader>: <versions, oldest first>".
+#
+# The jar is built for the newest version of the group and declares the whole range in its metadata. Every version is
+# still built on its own, and a group is only released when the jars built for its versions hold the same code, so
+# each reference in the shared jar was resolved against every version it is released for.
+#
+# Loaders: fabric, neoforge and forge.
+
+neoforge: 1.21 1.21.1
