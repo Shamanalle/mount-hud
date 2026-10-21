@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Mount HUD 设置",
+  "mounthud.settings.reset": "恢复默认",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "关闭后恢复原版界面。",
+  "mounthud.option.hunger_while_riding": "骑乘时显示饥饿值",
+  "mounthud.option.hunger_while_riding.tooltip": "骑马、猪、骆驼或炽足兽时，饥饿值与坐骑的生命值同时显示。",
+  "mounthud.option.hearts_position": "坐骑生命值",
+  "mounthud.option.hearts_position.tooltip": "显示饥饿值时，坐骑的生命值放在哪里。",
+  "mounthud.option.hearts_position.above_hunger": "饥饿值上方",
+  "mounthud.option.hearts_position.left": "左侧，盔甲值上方",
+  "mounthud.option.jump_bar": "跳跃条",
+  "mounthud.option.jump_bar.tooltip": "骑马或骆驼时，经验条何时变成跳跃条。",
+  "mounthud.option.jump_bar.auto": "蓄力时",
+  "mounthud.option.jump_bar.always_jump": "总是（原版）",
+  "mounthud.option.jump_bar.always_experience": "从不"
+}

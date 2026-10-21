@@ -1,0 +1,72 @@
+name: "🐞 Bug report / Ошибка"
+description: "Something is drawn wrong or the game crashes / Что-то рисуется не так или игра падает"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report! Exact versions, a screenshot and the list of other HUD mods make it much faster to fix.
+        Спасибо за отчёт! Точные версии, скриншот и список других модов на интерфейс сильно ускоряют исправление.
+
+  - type: dropdown
+    id: loader
+    attributes:
+      label: "Loader / Загрузчик"
+      options:
+        - Fabric
+        - Quilt
+        - Forge
+        - NeoForge
+    validations:
+      required: true
+
+  - type: input
+    id: mc_version
+    attributes:
+      label: "Minecraft version / Версия Minecraft"
+      placeholder: "1.20.1"
+    validations:
+      required: true
+
+  - type: input
+    id: mod_version
+    attributes:
+      label: "Mount HUD version / Версия Mount HUD"
+      description: "The file name from your mods folder / Имя файла из папки mods"
+      placeholder: "mount-hud-forge-0.1.0+mc1.20.1.jar"
+    validations:
+      required: true
+
+  - type: input
+    id: mount
+    attributes:
+      label: "Mount / Животное"
+      placeholder: "Horse, camel, pig, strider... / Лошадь, верблюд, свинья, страйдер..."
+
+  - type: textarea
+    id: other_mods
+    attributes:
+      label: "Other HUD mods / Другие моды на интерфейс"
+      description: "AppleSkin, Raised, Overflowing Bars, Colorful Hearts, Jade… and modpack name if any / и название модпака, если есть"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "What happened / Что случилось"
+      description: "What you expected and what you see; a screenshot helps a lot / Что ожидали и что видите; скриншот очень помогает"
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: "Config / Конфиг"
+      description: "Contents of config/mounthud.properties / Содержимое config/mounthud.properties"
+      render: properties
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Log or crash report / Лог или краш-репорт"
+      description: "logs/latest.log or crash-reports/…; a mclo.gs link is fine / logs/latest.log или crash-reports/…; можно ссылкой на mclo.gs"
+      render: text

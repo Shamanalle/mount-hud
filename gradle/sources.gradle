@@ -1,0 +1,64 @@
+// Sources of a loader module (fabric, forge, neoforge), applied by each of them:
+// - common/: the logic without Minecraft classes, the translations and the icon;
+// - mc/src/main/java: Minecraft code shared by the loaders, the same on every supported version;
+// - the module's own src/main/java and src/main/resources;
+// - the overlays named by "compat" in versions/<minecraft_version>.properties: src/compat/<name>/java and
+//   src/compat/<name>/resources of mc/ and then of the module, in that order. A later overlay replaces a file with
+//   the same path from an earlier one, so "base" holds the usual version of a version-specific file and, say,
+//   "until_1_21_5" the one for older Minecraft.
+
+def compatNames = rootProject.compat.split(',')*.trim().findAll { it }
+
+def overlay = { String kind ->
+    def dir = layout.buildDirectory.dir("compat/${kind}")
+    def task = tasks.register("mergeCompat${kind.capitalize()}", Sync) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        into dir
+        compatNames.each { name -> from(rootProject.file("mc/src/compat/${name}/${kind}")) }
+        compatNames.each { name -> from(project.file("src/compat/${name}/${kind}")) }
+    }
+    [dir: dir, task: task]
+}
+def compatJava = overlay('java')
+def compatResources = overlay('resources')
+
+sourceSets {
+    main {
+        java {
+            srcDir rootProject.file('common/src/main/java')
+            srcDir rootProject.file('mc/src/main/java')
+            srcDir compatJava.dir
+        }
+        resources {
+            srcDir rootProject.file('common/src/main/resources')
+            srcDir compatResources.dir
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    dependsOn compatJava.task
+    options.release = rootProject.java_version as int
+    options.encoding = 'UTF-8'
+}
+tasks.named('processResources') { dependsOn compatResources.task }
+tasks.matching { it.name in ['sourcesJar', 'genSources'] }.configureEach { dependsOn compatJava.task, compatResources.task }
+
+java {
+    sourceCompatibility = JavaVersion.toVersion(rootProject.java_version)
+    targetCompatibility = JavaVersion.toVersion(rootProject.java_version)
+}
+
+base {
+    archivesName = "mount-hud-${project.name}"
+}
+
+// mount-hud-<loader>-<mod version>+mc<minecraft version>.jar, or +mc<oldest>-<newest> for a shared jar
+ext.released = rootProject.releasedFor(project.name)
+version = "${project.mod_version}+mc${released.label}"
+
+jar {
+    from(rootProject.file('LICENSE')) {
+        rename { "LICENSE_mounthud" }
+    }
+}

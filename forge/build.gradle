@@ -1,0 +1,36 @@
+// The Forge jar of one Minecraft version. Forge 1.20.1 and older run with Forge's own (SRG) names: ModDevGradle's
+// legacyforge plugin compiles against Mojang's names and reobfJar turns the jar into Forge's names.
+apply plugin: 'net.neoforged.moddev.legacyforge'
+apply from: "${rootDir}/gradle/sources.gradle"
+
+legacyForge {
+    version = rootProject.forge_version
+    runs {
+        client {
+            client()
+        }
+    }
+    mods {
+        mounthud {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+processResources {
+    def versions = released.versions
+    def props = [version: project.version,
+                 minecraft_range: versions.size() == 1 ? "[${versions[0]}]" : "[${versions.first()},${versions.last()}]"]
+    inputs.properties props
+    def packMetadata = rootProject.packMetadata(versions)
+    inputs.property 'pack_metadata', packMetadata
+    filesMatching('META-INF/mods.toml') {
+        expand props
+    }
+    doLast {
+        new File(destinationDir, 'pack.mcmeta').text = packMetadata
+    }
+}
+
+// The jar a release takes: in Forge's names
+ext.releaseJarTask = 'reobfJar'

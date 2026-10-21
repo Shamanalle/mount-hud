@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Ustawienia Mount HUD",
+  "mounthud.settings.reset": "Przywróć domyślne",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Wyłączone przywraca zwykły interfejs.",
+  "mounthud.option.hunger_while_riding": "Głód podczas jazdy",
+  "mounthud.option.hunger_while_riding.tooltip": "Pokazuje pasek głodu podczas jazdy na koniu, świni lub wielbłądzie razem z sercami wierzchowca.",
+  "mounthud.option.hearts_position": "Serca wierzchowca",
+  "mounthud.option.hearts_position.tooltip": "Gdzie są serca wierzchowca, gdy widać pasek głodu.",
+  "mounthud.option.hearts_position.above_hunger": "Nad głodem",
+  "mounthud.option.hearts_position.left": "Po lewej, nad pancerzem",
+  "mounthud.option.jump_bar": "Pasek skoku",
+  "mounthud.option.jump_bar.tooltip": "Kiedy pasek doświadczenia zmienia się w pasek skoku podczas jazdy na koniu lub wielbłądzie.",
+  "mounthud.option.jump_bar.auto": "Podczas ładowania",
+  "mounthud.option.jump_bar.always_jump": "Zawsze (zwykły)",
+  "mounthud.option.jump_bar.always_experience": "Nigdy"
+}

@@ -1,0 +1,35 @@
+plugins {
+    id 'java-library'
+}
+
+// The logic of the mod without Minecraft classes: settings, what goes where on the HUD, mount stats. It is plain
+// Java 8, so the same code runs on every Minecraft from 1.16.5 (Java 8) to 26.x. The loader modules compile these
+// sources (and the translations in src/main/resources) into their jars; this module runs the unit tests.
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('compileJava', JavaCompile) {
+    options.release = 8
+    options.encoding = 'UTF-8'
+    // javac warns that release 8 is old; it is what Minecraft 1.16.5 runs on
+    options.compilerArgs += ['-Xlint:-options']
+}
+
+tasks.named('compileTestJava', JavaCompile) {
+    options.release = 17
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+    // LangConsistencyTest looks for translation keys in the sources of every module
+    systemProperty 'mounthud.root', rootDir.absolutePath
+}

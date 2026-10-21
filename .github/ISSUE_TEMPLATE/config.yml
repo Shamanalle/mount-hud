@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "📖 README — installation and settings"
+    url: https://github.com/Shamanalle/mount-hud#readme
+    about: "Versions, which file for which loader, compatibility, every setting"
+  - name: "📖 README — установка и настройки"
+    url: https://github.com/Shamanalle/mount-hud/blob/main/README.ru.md
+    about: "Версии, какой файл для какого загрузчика, совместимость, все настройки"

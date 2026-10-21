@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Mount HUD Settings",
+  "mounthud.settings.reset": "Reset to defaults",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Off gives the vanilla HUD back.",
+  "mounthud.option.hunger_while_riding": "Hunger while riding",
+  "mounthud.option.hunger_while_riding.tooltip": "Keep the hunger bar while riding a horse, pig, camel or strider, together with the mount's hearts.",
+  "mounthud.option.hearts_position": "Mount hearts",
+  "mounthud.option.hearts_position.tooltip": "Where your mount's hearts go while the hunger bar is shown.",
+  "mounthud.option.hearts_position.above_hunger": "Above hunger",
+  "mounthud.option.hearts_position.left": "Left, above armor",
+  "mounthud.option.jump_bar": "Jump bar",
+  "mounthud.option.jump_bar.tooltip": "When the experience bar turns into the jump bar while riding a horse or camel.",
+  "mounthud.option.jump_bar.auto": "While charging",
+  "mounthud.option.jump_bar.always_jump": "Always (vanilla)",
+  "mounthud.option.jump_bar.always_experience": "Never"
+}

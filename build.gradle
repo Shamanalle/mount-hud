@@ -1,0 +1,86 @@
+plugins {
+    id 'base'
+    // Fabric Loom remaps Minecraft up to 1.21.11 ("fabric-loom") and leaves 26.x, which is not obfuscated, as it is
+    id 'fabric-loom' version '1.19.2' apply false
+    id 'net.fabricmc.fabric-loom' version '1.19.2' apply false
+    // ModDevGradle: NeoForge 1.20.5 and newer, and Forge 1.17 - 1.20.1 (legacyforge, remapped to Forge's names by reobfJar)
+    id 'net.neoforged.moddev' version '2.0.148' apply false
+    id 'net.neoforged.moddev.legacyforge' version '2.0.148' apply false
+}
+
+// Per-version settings (loaders, their versions, Java, source overlays) from versions/<minecraft_version>.properties
+def versionFile = file("versions/${project.minecraft_version}.properties")
+def versionProps = new Properties()
+versionFile.withInputStream { versionProps.load(it) }
+versionProps.each { key, value -> ext.set(key as String, (value as String).trim()) }
+
+// Minecraft 26.1 and newer is not obfuscated: nothing is remapped
+ext.unobfuscated = !project.minecraft_version.startsWith('1.')
+
+// Minecraft versions the jar of a loader is released for (versions/shared-jars.txt): the versions of its group
+// when this is the newest of them, else this version alone. "label" names them in the jar file name.
+ext.releasedFor = { String loader ->
+    def group = file('versions/shared-jars.txt').readLines()
+            .findAll { it.trim() && !it.startsWith('#') }
+            .collect { it.split(':', 2)*.trim() }
+            .find { it[0] == loader && it[1].split(/\s+/).last() == project.minecraft_version }
+    def versions = group ? group[1].split(/\s+/) as List : [project.minecraft_version]
+    [versions: versions, label: versions.size() == 1 ? versions[0] : "${versions.first()}-${versions.last()}"]
+}
+
+// pack.mcmeta for the Forge and NeoForge jars: they skip the resources (translations) of a mod without one.
+// Minecraft before 1.21.9 (format 65) reads pack_format and, from 1.20.2, supported_formats; newer ones read
+// min_format and max_format.
+ext.packMetadata = { List<String> versions ->
+    def formats = versions.collect { v ->
+        def props = new Properties()
+        file("versions/${v}.properties").withInputStream { props.load(it) }
+        props.getProperty('resource_pack_format').trim().toInteger()
+    }
+    def oldest = formats.min()
+    def newest = formats.max()
+    def pack = [description: "${project.mod_name} resources"]
+    if (oldest < 65) {
+        pack.pack_format = oldest
+        if (newest != oldest) {
+            pack.supported_formats = [oldest, newest]
+        }
+    }
+    if (newest >= 65) {
+        pack.min_format = oldest
+        pack.max_format = newest
+    }
+    groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson([pack: pack])) + '\n'
+}
+
+allprojects {
+    group = project.maven_group
+    version = project.mod_version
+}
+
+// The loader modules of this Minecraft version and the task that makes each one's release jar: remapped to Fabric's
+// intermediary names up to 1.21.11, to Forge's names on Forge 1.20.1 and older, as built otherwise
+def loaders = project.loaders.split(',')*.trim().findAll { it }
+def releaseTask = { String loader ->
+    if (loader == 'fabric') {
+        return unobfuscated ? 'jar' : 'remapJar'
+    }
+    loader == 'forge' && (project.java_version as int) <= 17 ? 'reobfJar' : 'jar'
+}
+
+tasks.register('collectJars', Copy) {
+    group = 'build'
+    description = 'Copies the release jars of this Minecraft version into build/libs'
+    loaders.each { loader ->
+        dependsOn ":${loader}:${releaseTask(loader)}"
+        from(file("${loader}/build/libs")) {
+            include "mount-hud-${loader}-*.jar"
+            exclude '*-sources.jar', '*-dev*.jar'
+        }
+    }
+    into layout.buildDirectory.dir('libs')
+}
+
+tasks.named('build') {
+    dependsOn 'collectJars'
+}

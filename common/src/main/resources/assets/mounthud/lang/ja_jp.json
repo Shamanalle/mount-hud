@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Mount HUD の設定",
+  "mounthud.settings.reset": "初期設定に戻す",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "オフにするとバニラの HUD に戻ります。",
+  "mounthud.option.hunger_while_riding": "騎乗中の満腹度",
+  "mounthud.option.hunger_while_riding.tooltip": "馬・ブタ・ラクダ・ストライダーに乗っている間も、乗り物の体力と一緒に満腹度を表示します。",
+  "mounthud.option.hearts_position": "乗り物の体力",
+  "mounthud.option.hearts_position.tooltip": "満腹度を表示しているとき、乗り物のハートをどこに表示するか。",
+  "mounthud.option.hearts_position.above_hunger": "満腹度の上",
+  "mounthud.option.hearts_position.left": "左側、防御力の上",
+  "mounthud.option.jump_bar": "ジャンプゲージ",
+  "mounthud.option.jump_bar.tooltip": "馬やラクダに乗っているとき、経験値バーがジャンプゲージに変わるタイミング。",
+  "mounthud.option.jump_bar.auto": "溜めている間",
+  "mounthud.option.jump_bar.always_jump": "常に（バニラ）",
+  "mounthud.option.jump_bar.always_experience": "表示しない"
+}

@@ -1,0 +1,91 @@
+name: Build & Verify
+
+# Unit tests of the logic without Minecraft, then a build for every Minecraft version in versions/ (one job each:
+# a build is for one Minecraft version and makes the jars of the loaders that versions/<version>.properties names).
+#
+# A download that fails on the way (a timeout, a reset connection, HTTP 429 / 5xx; see .github/scripts/net-failure.sh)
+# is tried once more, with Maven Central through Google's mirror, and leaves a warning on the run. A compile error, a
+# failing test and a missing file fail at once.
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+# A new push to a pull request replaces the run still going for the previous one
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Unit tests (layout, settings, translations)
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check the network retry
+        run: bash .github/scripts/net-retry-selftest.sh
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Unit tests
+        run: |
+          chmod +x gradlew
+          bash .github/scripts/net-retry.sh -- ./gradlew :common:test --no-daemon
+      - name: Upload the test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: common/build/reports/tests/
+      - name: Minecraft versions to build
+        id: versions
+        run: |
+          versions=$(ls versions/*.properties | xargs -n1 basename | sed 's/\.properties$//' | sort -V | jq -R . | jq -cs .)
+          echo "Versions: ${versions}"
+          echo "versions=${versions}" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.mc }}
+    needs: unit
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ${{ fromJSON(needs.unit.outputs.versions) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Java 25 runs Gradle and compiles every version (older ones with --release 17 / 21)
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # Each version brings its own Minecraft; only main writes the cache, so pull requests do not push it out
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Build
+        run: |
+          chmod +x gradlew
+          bash .github/scripts/net-retry.sh -- ./gradlew build -x :common:test -Pminecraft_version=${{ matrix.mc }} --no-daemon
+      - name: Upload jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: mount-hud-${{ matrix.mc }}
+          path: build/libs/*.jar
+          if-no-files-found: error

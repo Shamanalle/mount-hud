@@ -1,0 +1,32 @@
+// The NeoForge jar of one Minecraft version (1.20.5 and newer, which run with Mojang's names: nothing is remapped).
+apply plugin: 'net.neoforged.moddev'
+apply from: "${rootDir}/gradle/sources.gradle"
+
+neoForge {
+    version = rootProject.neoforge_version
+    runs {
+        client {
+            client()
+        }
+    }
+    mods {
+        mounthud {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+processResources {
+    def versions = released.versions
+    def props = [version: project.version,
+                 minecraft_range: versions.size() == 1 ? "[${versions[0]}]" : "[${versions.first()},${versions.last()}]"]
+    inputs.properties props
+    def packMetadata = rootProject.packMetadata(versions)
+    inputs.property 'pack_metadata', packMetadata
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand props
+    }
+    doLast {
+        new File(destinationDir, 'pack.mcmeta').text = packMetadata
+    }
+}

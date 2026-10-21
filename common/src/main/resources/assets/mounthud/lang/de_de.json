@@ -1,0 +1,18 @@
+{
+  "mounthud.name": "Mount HUD",
+  "mounthud.settings.title": "Mount-HUD-Einstellungen",
+  "mounthud.settings.reset": "Zurücksetzen",
+  "mounthud.option.enabled": "Mount HUD",
+  "mounthud.option.enabled.tooltip": "Aus stellt das Vanilla-HUD wieder her.",
+  "mounthud.option.hunger_while_riding": "Hunger beim Reiten",
+  "mounthud.option.hunger_while_riding.tooltip": "Zeigt die Hungerleiste beim Reiten auf Pferd, Schwein, Kamel oder Schreiter zusammen mit den Herzen des Reittiers.",
+  "mounthud.option.hearts_position": "Herzen des Reittiers",
+  "mounthud.option.hearts_position.tooltip": "Wo die Herzen des Reittiers erscheinen, solange die Hungerleiste sichtbar ist.",
+  "mounthud.option.hearts_position.above_hunger": "Über dem Hunger",
+  "mounthud.option.hearts_position.left": "Links, über der Rüstung",
+  "mounthud.option.jump_bar": "Sprungleiste",
+  "mounthud.option.jump_bar.tooltip": "Wann die Erfahrungsleiste beim Reiten auf Pferd oder Kamel zur Sprungleiste wird.",
+  "mounthud.option.jump_bar.auto": "Beim Aufladen",
+  "mounthud.option.jump_bar.always_jump": "Immer (Vanilla)",
+  "mounthud.option.jump_bar.always_experience": "Nie"
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "mounthud",
+  "version": "${version}",
+  "name": "Mount HUD",
+  "description": "Hunger and your mount's health at the same time while riding, and the experience bar that turns into the jump bar only while you charge a jump.",
+  "authors": ["Shamanalle"],
+  "contact": {
+    "homepage": "https://github.com/Shamanalle/mount-hud",
+    "sources": "https://github.com/Shamanalle/mount-hud",
+    "issues": "https://github.com/Shamanalle/mount-hud/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/mounthud/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.kasper.mounthud.fabric.MountHudFabric"]
+  },
+  "mixins": ["mounthud.mixins.json"],
+  "depends": {
+    "fabricloader": ">=${loader_min}",
+    "minecraft": "${minecraft_range}",
+    "java": ">=${java_version}"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}
