@@ -20,6 +20,14 @@ cd mount-hud
 ./gradlew :fabric:runClient -Pminecraft_version=26.3  # a dev client; :neoforge / :forge likewise
 ```
 
+The in-game test (Fabric, Minecraft 1.21.4 and newer) starts the game, puts the player on a horse and checks the HUD in every setting, with screenshots in `fabric/build/run/clientGameTest/screenshots` (the `store_*` ones are 3840x2160, for the project pages). On Linux without a display, run it under `xvfb-run -a -s "-screen 0 3840x2160x24"`:
+
+```bash
+./gradlew :fabric:runClientGameTest -Pminecraft_version=1.21.4
+```
+
+CI runs it for every version from 1.21.4 on and starts the others (Forge, NeoForge, older Fabric) up to the main menu, checking the log.
+
 ### One build, one Minecraft version
 
 A build is for one Minecraft version: `minecraft_version` in `gradle.properties`, or `-Pminecraft_version=…`. Its file in `versions/` names the loaders built for it (`loaders = fabric, neoforge`), their versions, the Java version and the source overlays (`compat`). CI builds every file in `versions/` in its own job.
@@ -92,6 +100,14 @@ cd mount-hud
 ./gradlew build -Pminecraft_version=1.20.1            # другая версия (любой файл из versions/)
 ./gradlew :fabric:runClient -Pminecraft_version=26.3  # клиент для разработки; так же :neoforge / :forge
 ```
+
+Игровой тест (Fabric, Minecraft 1.21.4 и новее) запускает игру, сажает игрока на лошадь и проверяет HUD при каждой настройке; скриншоты в `fabric/build/run/clientGameTest/screenshots` (`store_*` — 3840x2160, для страниц проекта). На Linux без дисплея запускайте его через `xvfb-run -a -s "-screen 0 3840x2160x24"`:
+
+```bash
+./gradlew :fabric:runClientGameTest -Pminecraft_version=1.21.4
+```
+
+CI запускает его на каждой версии начиная с 1.21.4, а остальные (Forge, NeoForge, старый Fabric) запускает до главного меню и проверяет лог.
 
 ### Одна сборка — одна версия Minecraft
 

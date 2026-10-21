@@ -29,13 +29,56 @@ dependencies {
     }
 }
 
+// In-game test (Fabric client game test, from Minecraft 1.21.4): a separate test mod that is never part of the jar.
+// It puts the player on a horse and takes screenshots of the HUD; run with `./gradlew :fabric:runClientGameTest`
+// (needs a display; CI uses xvfb). Version-specific test code is in src/compat/<name>/gametest.
+def mc = rootProject.minecraft_version.tokenize('.')
+ext.gametest = unobfuscated || (mc[1] as int) > 21 || ((mc[1] as int) == 21 && mc.size() > 2 && (mc[2] as int) >= 4)
+if (gametest) {
+    sourceSets {
+        gametest {
+            compileClasspath += sourceSets.main.compileClasspath
+            runtimeClasspath += sourceSets.main.runtimeClasspath
+        }
+    }
+    dependencies {
+        gametestImplementation sourceSets.main.output
+    }
+    def gametestCompatDir = layout.buildDirectory.dir('compat/gametest')
+    def mergeGametestCompat = tasks.register('mergeGametestCompat', Sync) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        into gametestCompatDir
+        rootProject.compat.split(',')*.trim().findAll { it }.each { name -> from(project.file("src/compat/$name/gametest")) }
+    }
+    sourceSets.gametest.java.srcDir(gametestCompatDir)
+    tasks.named('compileGametestJava') { dependsOn mergeGametestCompat }
+    loom {
+        mods {
+            "mounthud-gametest" {
+                sourceSet sourceSets.gametest
+            }
+        }
+        runs {
+            clientGameTest {
+                inherit loom.runs.getByName("client")
+                name = "Client Game Test"
+                source sourceSets.gametest
+                property "fabric.client.gametest"
+                runDir "build/run/clientGameTest"
+            }
+        }
+    }
+}
+
 processResources {
     def versions = released.versions
     def minecraftRange = versions.size() == 1 ? versions[0] : ">=${versions.first()} <=${versions.last()}"
     def props = [version: project.version, minecraft_range: minecraftRange, java_version: rootProject.java_version,
-                 loader_min: rootProject.loader_min]
+                 loader_min: rootProject.loader_min,
+                 // Mixin knows Java levels up to 21; a higher one would refuse to load
+                 mixin_java: Math.min(rootProject.java_version as int, 21)]
     inputs.properties props
-    filesMatching('fabric.mod.json') {
+    filesMatching(['fabric.mod.json', 'mounthud.mixins.json']) {
         expand props
     }
 }

@@ -1,0 +1,128 @@
+name: In-game tests
+
+# The game is started on a virtual display. From Minecraft 1.21.4 on, Fabric's client game test puts the player on a
+# horse and checks the riding HUD (fabric/src/gametest); its screenshots are kept with the run. Fabric before 1.21.4
+# has no client game test, and NeoForge and Forge are not covered by it, so these get a start-up check: the game
+# starts up to the resource reload and the log is checked for the mod and for mixin failures.
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ingame-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  gametest:
+    name: Game test ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: [ "1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10", "1.21.11",
+              "26.1", "26.1.1", "26.1.2", "26.2", "26.3" ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Install virtual display
+        run: sudo apt-get update -q && sudo apt-get install -y -q xvfb libgl1-mesa-dri mesa-vulkan-drivers libvulkan1
+      # The game and its assets are downloaded before the test, so a slow download cannot use up the test's time
+      - name: Prepare the game
+        run: |
+          chmod +x gradlew
+          bash .github/scripts/net-retry.sh -- ./gradlew :fabric:compileGametestJava :fabric:configureClientLaunch \
+            --no-daemon -Pminecraft_version=${{ matrix.mc }}
+      - name: Run the game test
+        run: |
+          set -o pipefail
+          # The world sometimes takes longer to load than the test harness waits on a busy runner
+          # ("Timeout loading world"); a real failure fails both attempts.
+          for attempt in 1 2; do
+            xvfb-run -a -s "-screen 0 3840x2160x24" ./gradlew :fabric:runClientGameTest --no-daemon \
+              -Pminecraft_version=${{ matrix.mc }} | tee gametest.log && exit 0
+            echo "::warning::Game test attempt $attempt failed"
+          done
+          exit 1
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gametest-screenshots-${{ matrix.mc }}
+          path: fabric/build/run/clientGameTest/screenshots
+          if-no-files-found: ignore
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gametest-logs-${{ matrix.mc }}
+          path: fabric/build/run/clientGameTest/logs
+          if-no-files-found: ignore
+
+  smoke:
+    name: Start-up check ${{ matrix.loader }} ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { loader: forge, mc: "1.20.1" }
+          - { loader: neoforge, mc: "1.21" }
+          - { loader: neoforge, mc: "1.21.1" }
+          - { loader: fabric, mc: "1.21" }
+          - { loader: fabric, mc: "1.21.1" }
+          - { loader: fabric, mc: "1.21.2" }
+          - { loader: fabric, mc: "1.21.3" }
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Install virtual display
+        run: sudo apt-get update -q && sudo apt-get install -y -q xvfb libgl1-mesa-dri mesa-vulkan-drivers libvulkan1
+      - name: Prepare the game
+        run: |
+          chmod +x gradlew
+          # Loom names the task configureClientLaunch, ModDevGradle prepareClientRun
+          task=${{ matrix.loader == 'fabric' && 'configureClientLaunch' || 'prepareClientRun' }}
+          bash .github/scripts/net-retry.sh -- ./gradlew :${{ matrix.loader }}:$task --no-daemon \
+            -Pminecraft_version=${{ matrix.mc }}
+      - name: Start the game
+        run: |
+          # The early loading window of Forge and NeoForge sometimes hangs waiting for the virtual display's GL
+          # context; the game window alone is enough. The game is stopped by the timeout, so the exit code means
+          # nothing; the log check decides.
+          mkdir -p ${{ matrix.loader }}/run/config && echo "earlyWindowControl = false" > ${{ matrix.loader }}/run/config/fml.toml
+          xvfb-run -a -s "-screen 0 1280x720x24" timeout 300 ./gradlew :${{ matrix.loader }}:runClient --no-daemon \
+            -Pminecraft_version=${{ matrix.mc }} | tee smoke.log || true
+      - name: Check the log
+        run: |
+          grep -q "Mount HUD initialized" smoke.log
+          grep -q "Reloading ResourceManager" smoke.log
+          ! grep -E "InjectionError|Mixin apply for mod|Mixin apply failed|Critical injection failure|Mixin transformation of .* failed" smoke.log
+          # Without its pack metadata the loader skips the mod's resources, and so its translations
+          ! grep -E "Missing metadata in pack mod:mounthud" smoke.log

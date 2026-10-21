@@ -41,7 +41,7 @@ Mount HUD оставляет обе:
 
 ## Настройки
 
-`config/mounthud.properties`; их же меняет экран настроек (будет: Mod Menu на Fabric, список модов на Forge и NeoForge).
+`config/mounthud.properties`; их же меняет экран настроек: через Mod Menu на Fabric, кнопкой «Настроить» в списке модов на Forge и NeoForge.
 
 | Настройка | Значения | По умолчанию | Что делает |
 |---|---|---|---|
