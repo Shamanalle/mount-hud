@@ -93,10 +93,14 @@ public final class MountHudGameTest implements FabricClientGameTest {
         apply(context, s -> s.heartsPosition = HeartsPosition.ABOVE_HUNGER);
         BufferedImage modded = shot(context, prefix + "above_hunger");
         Region row = context.computeOnClient(mc -> Region.rightRow(mc, HudLayout.aboveHungerRow(height(mc))));
+        Region hunger = context.computeOnClient(mc -> Region.rightRow(mc, height(mc) - HudLayout.BOTTOM_ROW));
         apply(context, s -> s.enabled = false);
         BufferedImage vanilla = shot(context, prefix + "vanilla");
-        expect(row.hearts(modded) > row.minHearts(), "no mount hearts above hunger (" + row.hearts(modded) + " red pixels)");
-        expect(row.hearts(vanilla) < row.minHearts(), "the vanilla HUD has hearts above hunger, the check looks at the wrong place");
+        expect(row.hearts(modded) > row.minHearts(), "no mount hearts above hunger (" + row.hearts(modded) + " heart pixels)");
+        expect(hunger.hearts(modded) < hunger.minHearts(), "the mount's hearts still cover hunger");
+        // Vanilla draws the mount's hearts in place of hunger: if the check does not see them there, it looks at the
+        // wrong place or for the wrong colour
+        expect(hunger.hearts(vanilla) > hunger.minHearts(), "no mount hearts in place of hunger on the vanilla HUD, the check is off");
     }
 
     private void left(ClientGameTestContext context, TestServerContext server, String prefix) {
@@ -110,7 +114,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
         apply(context, s -> s.enabled = false);
         BufferedImage vanilla = shot(context, prefix + "left_vanilla");
         server.runCommand("item replace entity @a armor.chest with minecraft:air");
-        expect(row.hearts(modded) > row.minHearts(), "no mount hearts above the armor (" + row.hearts(modded) + " red pixels)");
+        expect(row.hearts(modded) > row.minHearts(), "no mount hearts above the armor (" + row.hearts(modded) + " heart pixels)");
         expect(row.hearts(vanilla) < row.minHearts(), "the vanilla HUD has hearts above the armor, the check looks at the wrong place");
     }
 
@@ -266,19 +270,22 @@ public final class MountHudGameTest implements FabricClientGameTest {
             return new Region(x * scale, row * scale, 80 * scale, 9 * scale, scale);
         }
 
-        /** Fewer red pixels than a few hearts have: no hearts in the row. */
+        /** Fewer heart pixels than a few hearts have: no hearts in the row. */
         int minHearts() {
             return 40 * scale * scale;
         }
 
-        /** The red pixels of hearts in the row. */
+        /**
+         * The pixels of the mount's hearts in the row: they are orange, unlike the player's red hearts and the brown
+         * and green food.
+         */
         int hearts(BufferedImage image) {
             int count = 0;
             for (int py = y; py < Math.min(y + height, image.getHeight()); py++) {
                 for (int px = x; px < Math.min(x + width, image.getWidth()); px++) {
                     int rgb = image.getRGB(px, py);
                     int r = rgb >> 16 & 0xFF, g = rgb >> 8 & 0xFF, b = rgb & 0xFF;
-                    if (r > 150 && g < 70 && b < 70) {
+                    if (r > 180 && g > 70 && g < 140 && b < 80) {
                         count++;
                     }
                 }
