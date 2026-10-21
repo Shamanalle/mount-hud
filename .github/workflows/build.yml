@@ -30,23 +30,23 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Check the network retry
         run: bash .github/scripts/net-retry-selftest.sh
       - name: Set up JDK 25
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '25'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
       - name: Unit tests
         run: |
           chmod +x gradlew
           bash .github/scripts/net-retry.sh -- ./gradlew :common:test --no-daemon
       - name: Upload the test report
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-report
           path: common/build/reports/tests/
@@ -67,15 +67,15 @@ jobs:
         mc: ${{ fromJSON(needs.unit.outputs.versions) }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       # Java 25 runs Gradle and compiles every version (older ones with --release 17 / 21)
       - name: Set up JDK 25
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '25'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
         with:
           # Each version brings its own Minecraft; only main writes the cache, so pull requests do not push it out
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
@@ -84,7 +84,7 @@ jobs:
           chmod +x gradlew
           bash .github/scripts/net-retry.sh -- ./gradlew build -x :common:test -Pminecraft_version=${{ matrix.mc }} --no-daemon
       - name: Upload jars
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mount-hud-${{ matrix.mc }}
           path: build/libs/*.jar
