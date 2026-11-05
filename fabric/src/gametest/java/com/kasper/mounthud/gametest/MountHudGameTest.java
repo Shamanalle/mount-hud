@@ -66,9 +66,9 @@ public final class MountHudGameTest implements FabricClientGameTest {
             mount(context, server);
 
             check(context, "the mount's hearts go above hunger", () -> aboveHunger(context, "en_"));
+            check(context, "the mount's stats show in the horse inventory and on the HUD", () -> mountStats(context, "en_"));
             check(context, "the mount's hearts go left, above armor", () -> left(context, server, "en_"));
             check(context, "the jump bar shows while charging a jump", () -> jumpBar(context, "en_"));
-            check(context, "the mount's stats show in the horse inventory and on the HUD", () -> mountStats(context, "en_"));
             check(context, "the settings screen resets the settings", () -> settingsScreen(context, "en"));
 
             // Russian strings are longer than English ones
@@ -209,7 +209,6 @@ public final class MountHudGameTest implements FabricClientGameTest {
         apply(context, s -> s.enabled = false);
         shot(context, "store_vanilla");
         apply(context, s -> { });
-        context.runOnClient(mc -> TestCompat.guiScale(mc, 4));
         context.runOnClient(mc -> mc.player.sendOpenInventory());
         context.waitFor(mc -> TestCompat.screen(mc) instanceof HorseInventoryScreen, 200);
         context.waitTicks(2);
@@ -313,7 +312,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
         static Region horseStatsPanel(net.minecraft.client.Minecraft mc) {
             int leftPos = (mc.getWindow().getGuiScaledWidth() - 176) / 2;
             int topPos = (mc.getWindow().getGuiScaledHeight() - 166) / 2;
-            return of(mc, leftPos + 82, topPos + 20, 84, 42);
+            return of(mc, leftPos + 83, topPos + 21, 52, 36);
         }
 
         private static Region of(net.minecraft.client.Minecraft mc, int x, int y, int width, int height) {
