@@ -3,12 +3,12 @@ package com.kasper.mounthud.fabric;
 import com.kasper.mounthud.MountHud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Fabric and Quilt entrypoint (client only). */
 public final class MountHudFabric implements ClientModInitializer {
-    private static final Logger LOG = LoggerFactory.getLogger(MountHud.NAME);
+    private static final Logger LOG = LogManager.getLogger(MountHud.NAME);
 
     @Override
     public void onInitializeClient() {

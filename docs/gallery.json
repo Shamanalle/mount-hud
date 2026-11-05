@@ -1,0 +1,32 @@
+[
+  {
+    "file": "docs/images/above-hunger.png",
+    "title": "Mount hearts above hunger and experience bar while riding",
+    "description": "The mount's hearts sit one row above the hunger bar while your experience bar and level stay visible.",
+    "featured": true
+  },
+  {
+    "file": "docs/images/jump-bar.png",
+    "title": "Jump bar while charging a jump",
+    "description": "The experience bar turns into the jump bar automatically while you hold jump.",
+    "featured": false
+  },
+  {
+    "file": "docs/images/left.png",
+    "title": "Mount hearts on the left above armor",
+    "description": "You can also place the mount's hearts on the left side above your armor row.",
+    "featured": false
+  },
+  {
+    "file": "docs/images/inventory.png",
+    "title": "Horse stats in the inventory screen",
+    "description": "Your mount's health, speed in blocks per second and jump height in blocks are shown in the horse inventory.",
+    "featured": false
+  },
+  {
+    "file": "docs/images/settings.png",
+    "title": "Settings screen",
+    "description": "Configure the mount hearts position, jump bar behavior and mount stats display in-game.",
+    "featured": false
+  }
+]

@@ -2,6 +2,7 @@ package com.kasper.mounthud.client;
 
 import com.kasper.mounthud.MountHud;
 import com.kasper.mounthud.compat.Canvas;
+import com.kasper.mounthud.compat.Mounts;
 import com.kasper.mounthud.config.Settings;
 import com.kasper.mounthud.hud.HudLayout;
 import com.kasper.mounthud.hud.HudPlan;
@@ -14,9 +15,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
@@ -44,9 +43,7 @@ public final class RidingHud {
 
     /** The living mount whose hearts are shown, or null. */
     public static LivingEntity mount() {
-        LocalPlayer player = Minecraft.getInstance().player;
-        Entity vehicle = player == null ? null : player.getVehicle();
-        return vehicle instanceof LivingEntity && vehicle.showVehicleHealth() ? (LivingEntity) vehicle : null;
+        return Mounts.healthMount(Minecraft.getInstance().player);
     }
 
     /** Calculates the mount's health, speed in blocks per second and jump height in blocks. */
@@ -183,9 +180,8 @@ public final class RidingHud {
         if (mount != null) {
             state.mount(mount.getHealth(), mount.getMaxHealth());
         }
-        PlayerRideableJumping jumping = player.jumpableVehicle();
-        if (jumping != null) {
-            state.jumping(player.getJumpRidingScale(), jumping.getJumpCooldown() > 0);
+        if (Mounts.isJumpingMount(player)) {
+            state.jumping(player.getJumpRidingScale(), Mounts.isJumpOnCooldown(player));
         }
         return state;
     }

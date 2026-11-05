@@ -1,7 +1,8 @@
 name: Build & Verify
 
 # Unit tests of the logic without Minecraft, then a build for every Minecraft version in versions/ (one job each:
-# a build is for one Minecraft version and makes the jars of the loaders that versions/<version>.properties names).
+# a build is for one Minecraft version and makes the jars of the loaders that versions/<version>.properties names),
+# and finally a bundle check that verifies shared jars and packs them into the universal jars of versions/bundles.txt.
 #
 # A download that fails on the way (a timeout, a reset connection, HTTP 429 / 5xx; see .github/scripts/net-failure.sh)
 # is tried once more, with Maven Central through Google's mirror, and leaves a warning on the run. A compile error, a
@@ -68,7 +69,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      # Java 25 runs Gradle and compiles every version (older ones with --release 17 / 21)
+      # Java 25 runs Gradle and compiles every version (older ones with --release 8 / 16 / 17 / 21)
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
@@ -88,4 +89,34 @@ jobs:
         with:
           name: mount-hud-${{ matrix.mc }}
           path: build/libs/*.jar
+          if-no-files-found: error
+
+  bundle:
+    name: Check shared jars & build bundles
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Download jars
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mount-hud-*
+          merge-multiple: true
+          path: jars
+      - name: Check shared jars and build bundles
+        run: |
+          python3 .github/scripts/release_groups.py check jars release-jars
+          python3 .github/scripts/bundle.py release-jars bundled-jars
+          ls -la bundled-jars/
+      - name: Upload bundled jars
+        uses: actions/upload-artifact@v4
+        with:
+          name: mount-hud-bundles
+          path: bundled-jars/*.jar
           if-no-files-found: error

@@ -1,0 +1,7 @@
+# Multi-version jars a release publishes, as "<loaders>: <oldest version> <newest version>".
+# Each release jar from versions/shared-jars.txt becomes a relocated variant inside its loader's bundle,
+# and boot/ starts the variant matching the running loader and Minecraft version.
+
+fabric: 1.16.5 26.3
+forge: 1.17.1 1.20.1
+neoforge: 1.20.5 26.3

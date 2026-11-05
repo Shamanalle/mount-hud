@@ -1,6 +1,6 @@
 name: Publish to Modrinth & CurseForge
 
-# Uploads the jars of one GitHub release to Modrinth and CurseForge. The files are downloaded from the
+# Uploads the bundled jars of one GitHub release to Modrinth and CurseForge. The files are downloaded from the
 # release, so the stores get exactly what GitHub has. Runs after "Publish Release", or by hand
 # (Actions -> Publish to Modrinth & CurseForge -> Run workflow) for a tag that already has a release.
 #
@@ -37,11 +37,10 @@ jobs:
       modrinth: ${{ steps.ids.outputs.modrinth }}
       curseforge: ${{ steps.ids.outputs.curseforge }}
       channel: ${{ steps.ids.outputs.channel }}
+      entries: ${{ steps.list.outputs.entries }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: .github
 
       - name: Read project ids and tokens
         id: ids
@@ -68,21 +67,76 @@ jobs:
           echo "curseforge=${curseforge}" >> "$GITHUB_OUTPUT"
           echo "channel=$(jq -r '.channel // "release"' .github/publish.json)" >> "$GITHUB_OUTPUT"
 
+      - name: List store uploads
+        id: list
+        run: |
+          echo "entries=$(python3 .github/scripts/bundle.py entries)" >> "$GITHUB_OUTPUT"
+
   publish:
-    name: Upload release files
+    name: Upload ${{ matrix.loader }} ${{ matrix.label }}
     needs: config
     if: needs.config.outputs.modrinth != '' || needs.config.outputs.curseforge != ''
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include: ${{ fromJSON(needs.config.outputs.entries) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download release jars and notes
+      - name: Download release jar and notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ inputs.tag }}
         run: |
           mkdir -p dist
-          gh release download "${TAG}" --pattern 'mount-hud-*.jar' --dir dist
+          gh release download "${TAG}" --pattern "${{ matrix.file }}" --dir dist
           bash .github/scripts/release-notes.sh "${TAG}" > dist/notes.md
-          ls -la dist/
+
+      - name: Mark the jar for its loader
+        if: matrix.marker
+        run: |
+          python3 -c '
+          import sys, zipfile
+          with zipfile.ZipFile(sys.argv[1], "a") as jar:
+              jar.writestr("META-INF/mounthud-store-upload.txt", sys.argv[2] + "\n")
+          ' "dist/${{ matrix.file }}" "${{ matrix.loader }}"
+
+      - name: Prepare upload metadata
+        id: prep
+        run: |
+          version="${{ inputs.tag }}"
+          version="${version#v}"
+          loader="${{ matrix.loader }}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "number=${version}+mc${{ matrix.label }}-${loader}" >> "$GITHUB_OUTPUT"
+          echo "file=dist/${{ matrix.file }}" >> "$GITHUB_OUTPUT"
+          echo "loaders=${{ matrix.loaders }}" >> "$GITHUB_OUTPUT"
+          echo "name=${loader^}" | sed 's/Neoforge/NeoForge/' >> "$GITHUB_OUTPUT"
+          echo "range=${{ matrix.label }}" | sed 's/-/–/' >> "$GITHUB_OUTPUT"
+          {
+            echo 'game_versions<<EOF'
+            tr ' ' '\n' <<< "${{ matrix.versions }}"
+            echo 'EOF'
+            echo 'dependencies<<EOF'
+            if [ "${loader}" = "fabric" ]; then printf 'modmenu(optional)\n'; fi
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Modrinth & CurseForge
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: ${{ needs.config.outputs.modrinth }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: ${{ needs.config.outputs.curseforge }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: ${{ steps.prep.outputs.file }}
+          name: Mount HUD ${{ steps.prep.outputs.version }} (${{ steps.prep.outputs.name }} ${{ steps.prep.outputs.range }})
+          version: ${{ steps.prep.outputs.number }}
+          version-type: ${{ needs.config.outputs.channel }}
+          changelog-file: dist/notes.md
+          loaders: ${{ steps.prep.outputs.loaders }}
+          game-versions: ${{ steps.prep.outputs.game_versions }}
+          dependencies: ${{ steps.prep.outputs.dependencies }}

@@ -8,18 +8,27 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-/** NeoForge entrypoint (client only: a dedicated server skips the mod). */
-@Mod(value = MountHud.MOD_ID, dist = Dist.CLIENT)
+/** NeoForge entrypoint. The mod only changes the HUD: on a dedicated server it loads and does nothing. */
+@Mod(MountHud.MOD_ID)
 public final class MountHudNeoForge {
-    private static final Logger LOG = LoggerFactory.getLogger(MountHud.NAME);
+    private static final Logger LOG = LogManager.getLogger(MountHud.NAME);
 
-    public MountHudNeoForge(IEventBus modBus, ModContainer container) {
-        MountHud.init(FMLPaths.CONFIGDIR.get(), LOG::warn);
-        LOG.info("{} initialized", MountHud.NAME);
-        modBus.addListener(HudHook::registerLayers);
-        container.registerExtensionPoint(IConfigScreenFactory.class, (mod, parent) -> new SettingsScreen(parent));
+    public MountHudNeoForge(IEventBus modBus, ModContainer container, Dist dist) {
+        if (dist == Dist.CLIENT) {
+            Client.init(modBus, container);
+        }
+    }
+
+    /** Client classes stay out of the constructor, so a server never loads them. */
+    private static final class Client {
+        static void init(IEventBus modBus, ModContainer container) {
+            MountHud.init(FMLPaths.CONFIGDIR.get(), LOG::warn);
+            LOG.info("{} initialized", MountHud.NAME);
+            modBus.addListener(HudHook::registerLayers);
+            container.registerExtensionPoint(IConfigScreenFactory.class, (mod, parent) -> new SettingsScreen(parent));
+        }
     }
 }
