@@ -30,13 +30,17 @@ Mount HUD keeps both:
 
 - **Hunger and the mount's hearts at once.** The mount's hearts go one row above hunger (the air bubbles move up above them), or to the left above your armor, as you choose.
 - **Experience while riding.** The experience bar and level stay visible and turn into the jump bar only while you charge a jump (and while a camel's dash recharges). You can also keep the jump bar all the time, as in vanilla, or never show it.
+- **Mount stats.** Your mount's health, speed in blocks per second and jump height in blocks are shown in the horse inventory screen and, if you turn them on, above the mount's hearts on the HUD while riding.
 
 The mod only changes your HUD: it is not needed on the server, and works on any server.
 
+## Compatibility
+
+- **AppleSkin** — saturation, hunger exhaustion and food restoration previews are drawn on the hunger bar while riding on Fabric, Forge and NeoForge.
+- **Raised** — the mount's hearts, hunger bar, experience/jump bar and HUD stats follow the HUD offset automatically.
+
 ## Planned
 
-- Mount stats: speed in blocks per second, jump height in blocks and health, in the horse's inventory screen and, if you like, on the HUD while riding.
-- Compatibility with AppleSkin, Raised, Overflowing Bars, Colorful Hearts, Mantle / Tinkers' Construct, Jade and WTHIT, described here once checked.
 - Every Minecraft version from 1.16.5 to 26.3 on Forge, NeoForge and Fabric, in as few files as possible.
 
 ## Settings
@@ -49,6 +53,7 @@ The mod only changes your HUD: it is not needed on the server, and works on any 
 | `hunger_while_riding` | `true` / `false` | `true` | Keep the hunger bar while riding a mount with health |
 | `hearts_position` | `above_hunger` / `left` | `above_hunger` | Where the mount's hearts go while hunger is shown |
 | `jump_bar` | `auto` / `always_jump` / `always_experience` | `auto` | `auto`: experience, the jump bar while charging; `always_jump`: as in vanilla; `always_experience`: never the jump bar |
+| `mount_stats` | `inventory` / `hud_and_inventory` / `off` | `inventory` | Where the mount's speed, jump height and health are shown |
 
 ## Languages
 

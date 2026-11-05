@@ -24,28 +24,36 @@ public final class HudPlan {
     /** Rows of mount hearts. */
     public final int heartRows;
     public final Bar bar;
+    /** Whether the mount's stats line is drawn on the HUD above the mount's hearts. */
+    public final boolean stats;
     /**
      * Rows the air bubbles move up from where they are without a mount (one row above hunger), so they stay above
-     * mount hearts drawn on the right.
+     * mount hearts and stats drawn on the right.
      */
     public final int airRowsUp;
 
     HudPlan(boolean vanilla, boolean hunger, Hearts hearts, int heartRows, Bar bar) {
+        this(vanilla, hunger, hearts, heartRows, bar, false);
+    }
+
+    HudPlan(boolean vanilla, boolean hunger, Hearts hearts, int heartRows, Bar bar, boolean stats) {
         this.vanilla = vanilla;
         this.hunger = hunger;
         this.hearts = hearts;
         this.heartRows = heartRows;
         this.bar = bar;
-        this.airRowsUp = airRowsUp(hearts, heartRows);
+        this.stats = stats;
+        this.airRowsUp = airRowsUp(hearts, heartRows, stats);
     }
 
-    private static int airRowsUp(Hearts hearts, int heartRows) {
+    private static int airRowsUp(Hearts hearts, int heartRows, boolean stats) {
+        int extra = stats ? 1 : 0;
         switch (hearts) {
             case VANILLA:
                 // The hearts take hunger's row and those above it; the bubbles sit on top
-                return heartRows - 1;
+                return heartRows - 1 + extra;
             case ABOVE_HUNGER:
-                return heartRows;
+                return heartRows + extra;
             default:
                 return 0;
         }
@@ -59,6 +67,6 @@ public final class HudPlan {
     @Override
     public String toString() {
         return "HudPlan{vanilla=" + vanilla + ", hunger=" + hunger + ", hearts=" + hearts + " x" + heartRows
-                + ", bar=" + bar + ", airRowsUp=" + airRowsUp + '}';
+                + ", bar=" + bar + ", stats=" + stats + ", airRowsUp=" + airRowsUp + '}';
     }
 }

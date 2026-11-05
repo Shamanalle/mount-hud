@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Коли смужка досвіду змінюється смужкою стрибка верхи на коні чи верблюді.",
   "mounthud.option.jump_bar.auto": "Поки заряджаєш",
   "mounthud.option.jump_bar.always_jump": "Завжди (як у ванілі)",
-  "mounthud.option.jump_bar.always_experience": "Ніколи"
+  "mounthud.option.jump_bar.always_experience": "Ніколи",
+  "mounthud.option.mount_stats": "Характеристики",
+  "mounthud.option.mount_stats.tooltip": "Де показувати швидкість, висоту стрибка та здоров'я тварини.",
+  "mounthud.option.mount_stats.inventory": "В інвентарі",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD та інвентар",
+  "mounthud.option.mount_stats.off": "Вимк",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s бл/с",
+  "mounthud.stats.jump": "%s бл"
 }

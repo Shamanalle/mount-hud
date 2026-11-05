@@ -10,6 +10,8 @@ public final class Settings {
     public HeartsPosition heartsPosition = HeartsPosition.ABOVE_HUNGER;
     /** What replaces the experience bar while riding a mount that jumps. */
     public JumpBarMode jumpBar = JumpBarMode.AUTO;
+    /** Where the mount's speed, jump height and health are shown. */
+    public MountStatsMode mountStats = MountStatsMode.INVENTORY;
 
     public Settings copy() {
         Settings s = new Settings();
@@ -17,6 +19,7 @@ public final class Settings {
         s.hungerWhileRiding = hungerWhileRiding;
         s.heartsPosition = heartsPosition;
         s.jumpBar = jumpBar;
+        s.mountStats = mountStats;
         return s;
     }
 
@@ -27,11 +30,12 @@ public final class Settings {
         }
         Settings s = (Settings) o;
         return enabled == s.enabled && hungerWhileRiding == s.hungerWhileRiding
-                && heartsPosition == s.heartsPosition && jumpBar == s.jumpBar;
+                && heartsPosition == s.heartsPosition && jumpBar == s.jumpBar
+                && mountStats == s.mountStats;
     }
 
     @Override
     public int hashCode() {
-        return java.util.Arrays.hashCode(new Object[]{enabled, hungerWhileRiding, heartsPosition, jumpBar});
+        return java.util.Arrays.hashCode(new Object[]{enabled, hungerWhileRiding, heartsPosition, jumpBar, mountStats});
     }
 }

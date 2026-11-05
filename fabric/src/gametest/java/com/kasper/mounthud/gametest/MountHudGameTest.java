@@ -4,12 +4,15 @@ import com.kasper.mounthud.MountHud;
 import com.kasper.mounthud.client.SettingsScreen;
 import com.kasper.mounthud.config.HeartsPosition;
 import com.kasper.mounthud.config.JumpBarMode;
+import com.kasper.mounthud.config.MountStatsMode;
 import com.kasper.mounthud.config.Settings;
 import com.kasper.mounthud.hud.HudLayout;
+import com.kasper.mounthud.hud.MountHearts;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestServerContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +27,20 @@ import java.util.function.Consumer;
 
 /**
  * Puts the player on a horse and checks the riding HUD: the mount's hearts above hunger or on the left, the jump
- * bar while charging a jump, the settings screen. Every step leaves a screenshot in
- * build/run/clientGameTest/screenshots; the ones named store_* are 3840x2160, for the project pages.
+ * bar while charging a jump, the mount's stats in the horse inventory and on the HUD, and the settings screen. Every
+ * step leaves a screenshot in build/run/clientGameTest/screenshots; the ones named store_* are 3840x2160, for the
+ * project pages.
  */
 public final class MountHudGameTest implements FabricClientGameTest {
     private static final Logger LOGGER = LoggerFactory.getLogger("MountHud/GameTest");
     /** Every translation but English and Russian: the settings screen only, to catch strings that do not fit. */
     private static final List<String> TRANSLATIONS = List.of(
             "de_de", "es_es", "fr_fr", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br", "tr_tr", "uk_ua", "zh_cn");
-    /** The horse has 30 health: two rows of mount hearts. */
+    /** The horse has 30 health (two rows of mount hearts), 0.225 speed (9.7 bl/s) and 0.7 jump strength (2.9 bl). */
     private static final String HORSE = "minecraft:horse 0.5 -60 2.5 {Tame:1b,Health:23f,"
-            + "attributes:[{id:\"minecraft:max_health\",base:30d}],"
+            + "attributes:[{id:\"minecraft:max_health\",base:30d},"
+            + "{id:\"minecraft:movement_speed\",base:0.225d},"
+            + "{id:\"minecraft:jump_strength\",base:0.7d}],"
             // The saddle is an equipment slot from 1.21.5 on and SaddleItem before; each version skips the other
             + "SaddleItem:{id:\"minecraft:saddle\",count:1},equipment:{saddle:{id:\"minecraft:saddle\",count:1}}}";
     private static final int STORE_GUI_SCALE = 6;
@@ -62,12 +68,14 @@ public final class MountHudGameTest implements FabricClientGameTest {
             check(context, "the mount's hearts go above hunger", () -> aboveHunger(context, "en_"));
             check(context, "the mount's hearts go left, above armor", () -> left(context, server, "en_"));
             check(context, "the jump bar shows while charging a jump", () -> jumpBar(context, "en_"));
+            check(context, "the mount's stats show in the horse inventory and on the HUD", () -> mountStats(context, "en_"));
             check(context, "the settings screen resets the settings", () -> settingsScreen(context, "en"));
 
             // Russian strings are longer than English ones
             setLanguage(context, "ru_ru");
-            check(context, "Russian: HUD and settings", () -> {
+            check(context, "Russian: HUD, inventory stats and settings", () -> {
                 aboveHunger(context, "ru_");
+                mountStats(context, "ru_");
                 settingsScreen(context, "ru");
             });
             for (String code : TRANSLATIONS) {
@@ -135,10 +143,41 @@ public final class MountHudGameTest implements FabricClientGameTest {
         shot(context, prefix + "always_experience");
     }
 
+    private void mountStats(ClientGameTestContext context, String prefix) {
+        // 1. HUD stats above the two rows of mount hearts
+        apply(context, s -> s.mountStats = MountStatsMode.INVENTORY);
+        BufferedImage hudWithoutStats = shot(context, prefix + "hud_no_stats");
+        apply(context, s -> s.mountStats = MountStatsMode.HUD_AND_INVENTORY);
+        BufferedImage hudWithStats = shot(context, prefix + "hud_stats");
+        Region statsRow = context.computeOnClient(mc -> Region.rightRow(mc,
+                HudLayout.aboveHungerRow(height(mc)) - 2 * MountHearts.ROW_HEIGHT));
+        expect(statsRow.whiteText(hudWithStats) > statsRow.minText(),
+                "no mount stats text above mount hearts on the HUD (" + statsRow.whiteText(hudWithStats) + " white pixels)");
+        expect(statsRow.whiteText(hudWithoutStats) < statsRow.minText(),
+                "HUD has white text pixels above mount hearts when HUD stats are off");
+
+        // 2. Horse inventory screen stats in the right-hand panel
+        apply(context, s -> s.mountStats = MountStatsMode.INVENTORY);
+        context.runOnClient(mc -> mc.player.sendOpenInventory());
+        context.waitFor(mc -> TestCompat.screen(mc) instanceof HorseInventoryScreen, 200);
+        context.waitTicks(2);
+        BufferedImage invWithStats = shot(context, prefix + "horse_inventory");
+        Region panel = context.computeOnClient(Region::horseStatsPanel);
+        apply(context, s -> s.mountStats = MountStatsMode.OFF);
+        BufferedImage invWithoutStats = shot(context, prefix + "horse_inventory_off");
+        context.runOnClient(mc -> mc.player.closeContainer());
+        context.waitTicks(2);
+        expect(panel.darkText(invWithStats) > panel.minText(),
+                "no mount stats in the horse inventory panel (" + panel.darkText(invWithStats) + " dark pixels)");
+        expect(panel.darkText(invWithoutStats) == 0,
+                "horse inventory panel still has dark pixels when mount stats are off");
+    }
+
     private void settingsScreen(ClientGameTestContext context, String lang) {
         apply(context, s -> {
             s.heartsPosition = HeartsPosition.LEFT;
             s.jumpBar = JumpBarMode.ALWAYS_JUMP;
+            s.mountStats = MountStatsMode.HUD_AND_INVENTORY;
         });
         context.setScreen(() -> new SettingsScreen(null));
         context.takeScreenshot(lang + "_settings_changed");
@@ -171,6 +210,12 @@ public final class MountHudGameTest implements FabricClientGameTest {
         shot(context, "store_vanilla");
         apply(context, s -> { });
         context.runOnClient(mc -> TestCompat.guiScale(mc, 4));
+        context.runOnClient(mc -> mc.player.sendOpenInventory());
+        context.waitFor(mc -> TestCompat.screen(mc) instanceof HorseInventoryScreen, 200);
+        context.waitTicks(2);
+        context.takeScreenshot("store_inventory");
+        context.runOnClient(mc -> mc.player.closeContainer());
+        context.waitTicks(2);
         context.setScreen(() -> new SettingsScreen(null));
         context.takeScreenshot("store_settings");
         context.setScreen(() -> null);
@@ -253,26 +298,37 @@ public final class MountHudGameTest implements FabricClientGameTest {
         }
     }
 
-    /** One row of ten hearts on the HUD, in screenshot pixels. */
+    /** A rectangle on the HUD or inside the horse inventory screen, in screenshot pixels. */
     private record Region(int x, int y, int width, int height, int scale) {
         static Region rightRow(net.minecraft.client.Minecraft mc, int row) {
             int center = mc.getWindow().getGuiScaledWidth() / 2;
-            return of(mc, center + 11, row);
+            return of(mc, center + 11, row, 80, 9);
         }
 
         static Region leftRow(net.minecraft.client.Minecraft mc, int row) {
             int center = mc.getWindow().getGuiScaledWidth() / 2;
-            return of(mc, center - 91, row);
+            return of(mc, center - 91, row, 80, 9);
         }
 
-        private static Region of(net.minecraft.client.Minecraft mc, int x, int row) {
+        static Region horseStatsPanel(net.minecraft.client.Minecraft mc) {
+            int leftPos = (mc.getWindow().getGuiScaledWidth() - 176) / 2;
+            int topPos = (mc.getWindow().getGuiScaledHeight() - 166) / 2;
+            return of(mc, leftPos + 82, topPos + 20, 84, 42);
+        }
+
+        private static Region of(net.minecraft.client.Minecraft mc, int x, int y, int width, int height) {
             int scale = (int) Math.round(mc.getWindow().getGuiScale());
-            return new Region(x * scale, row * scale, 80 * scale, 9 * scale, scale);
+            return new Region(x * scale, y * scale, width * scale, height * scale, scale);
         }
 
         /** Fewer heart pixels than a few hearts have: no hearts in the row. */
         int minHearts() {
             return 40 * scale * scale;
+        }
+
+        /** Minimum glyph pixels for a line of stats text. */
+        int minText() {
+            return 25 * scale * scale;
         }
 
         /**
@@ -286,6 +342,36 @@ public final class MountHudGameTest implements FabricClientGameTest {
                     int rgb = image.getRGB(px, py);
                     int r = rgb >> 16 & 0xFF, g = rgb >> 8 & 0xFF, b = rgb & 0xFF;
                     if (r > 180 && g > 70 && g < 140 && b < 80) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        /** Bright white text pixels (0xFFFFFF) drawn on the HUD. */
+        int whiteText(BufferedImage image) {
+            int count = 0;
+            for (int py = y; py < Math.min(y + height, image.getHeight()); py++) {
+                for (int px = x; px < Math.min(x + width, image.getWidth()); px++) {
+                    int rgb = image.getRGB(px, py);
+                    int r = rgb >> 16 & 0xFF, g = rgb >> 8 & 0xFF, b = rgb & 0xFF;
+                    if (r > 230 && g > 230 && b > 230) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        /** Dark gray text pixels (0x404040) drawn on the light gray (0xC6C6C6) horse inventory panel. */
+        int darkText(BufferedImage image) {
+            int count = 0;
+            for (int py = y; py < Math.min(y + height, image.getHeight()); py++) {
+                for (int px = x; px < Math.min(x + width, image.getWidth()); px++) {
+                    int rgb = image.getRGB(px, py);
+                    int r = rgb >> 16 & 0xFF, g = rgb >> 8 & 0xFF, b = rgb & 0xFF;
+                    if (r < 90 && g < 90 && b < 90) {
                         count++;
                     }
                 }

@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Wann die Erfahrungsleiste beim Reiten auf Pferd oder Kamel zur Sprungleiste wird.",
   "mounthud.option.jump_bar.auto": "Beim Aufladen",
   "mounthud.option.jump_bar.always_jump": "Immer (Vanilla)",
-  "mounthud.option.jump_bar.always_experience": "Nie"
+  "mounthud.option.jump_bar.always_experience": "Nie",
+  "mounthud.option.mount_stats": "Reittierwerte",
+  "mounthud.option.mount_stats.tooltip": "Wo Tempo, Sprunghöhe und Leben des Reittiers angezeigt werden.",
+  "mounthud.option.mount_stats.inventory": "Im Inventar",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD und Inventar",
+  "mounthud.option.mount_stats.off": "Aus",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s Bl/s",
+  "mounthud.stats.jump": "%s Bl"
 }

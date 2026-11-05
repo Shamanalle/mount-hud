@@ -7,17 +7,20 @@ import com.kasper.mounthud.hud.MountHearts;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * Forge draws the HUD as named overlays, each stacking its rows on ForgeGui's leftHeight and rightHeight. Hunger is
- * drawn by the mod after the hunger overlay (which skips it on a mount), the mount's hearts right after it (on the
- * right) or on the left, and the vanilla mount health overlay is cancelled; the air overlay that follows stacks above
- * them on its own.
+ * drawn at HIGHEST priority after the hunger overlay (which skips it on a mount) so mods like AppleSkin that listen
+ * at NORMAL priority see rightHeight at the hunger row and draw their saturation overlay on top of hunger. The
+ * mount's hearts and optional HUD stats are then drawn when MOUNT_HEALTH runs, and the air overlay that follows stacks
+ * above them on its own.
  */
 public final class HudHook {
     private HudPlan plan;
@@ -34,6 +37,7 @@ public final class HudHook {
         }
         if (overlay.id().equals(VanillaGuiOverlay.MOUNT_HEALTH.id())) {
             if (RidingHud.drawsMountHearts(plan)) {
+                drawMountHud(event, true);
                 event.setCanceled(true);
             }
         } else if (overlay.id().equals(VanillaGuiOverlay.JUMP_BAR.id())) {
@@ -55,12 +59,39 @@ public final class HudHook {
         }
     }
 
-    @SubscribeEvent
-    public void post(RenderGuiOverlayEvent.Post event) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void postFood(RenderGuiOverlayEvent.Post event) {
         if (plan == null || plan.vanilla || !RidingHud.drawsMountHearts(plan)
                 || !event.getOverlay().id().equals(VanillaGuiOverlay.FOOD_LEVEL.id())) {
             return;
         }
+        Minecraft minecraft = Minecraft.getInstance();
+        if (RidingHud.mount() == null || minecraft.options.hideGui || !(minecraft.gui instanceof ForgeGui)) {
+            return;
+        }
+        ForgeGui gui = (ForgeGui) minecraft.gui;
+        int width = event.getWindow().getGuiScaledWidth();
+        int height = event.getWindow().getGuiScaledHeight();
+        gui.setupOverlayRenderState(true, false);
+        // The hunger overlay skips hunger on a mount with health
+        gui.renderFood(width, height, event.getGuiGraphics());
+    }
+
+    @SubscribeEvent
+    public void postMountHealth(RenderGuiOverlayEvent.Post event) {
+        if (plan == null || plan.vanilla || RidingHud.drawsMountHearts(plan) || !plan.stats
+                || !event.getOverlay().id().equals(VanillaGuiOverlay.MOUNT_HEALTH.id())) {
+            return;
+        }
+        drawMountHud(event, false);
+    }
+
+    @SubscribeEvent
+    public void containerForeground(ContainerScreenEvent.Render.Foreground event) {
+        RidingHud.drawInventoryStats(new Canvas(event.getGuiGraphics()), event.getContainerScreen());
+    }
+
+    private void drawMountHud(RenderGuiOverlayEvent event, boolean drawHearts) {
         Minecraft minecraft = Minecraft.getInstance();
         LivingEntity mount = RidingHud.mount();
         if (mount == null || minecraft.options.hideGui || !(minecraft.gui instanceof ForgeGui)) {
@@ -70,16 +101,26 @@ public final class HudHook {
         int width = event.getWindow().getGuiScaledWidth();
         int height = event.getWindow().getGuiScaledHeight();
         gui.setupOverlayRenderState(true, false);
-        // The hunger overlay skips hunger on a mount with health
-        gui.renderFood(width, height, event.getGuiGraphics());
         Canvas canvas = new Canvas(event.getGuiGraphics());
         int rows = MountHearts.rows(MountHearts.hearts(mount.getMaxHealth()));
-        if (plan.hearts == HudPlan.Hearts.LEFT) {
-            RidingHud.drawMountHearts(canvas, mount, width / 2 - 91, height - gui.leftHeight, true);
-            gui.leftHeight += rows * MountHearts.ROW_HEIGHT;
-        } else {
-            RidingHud.drawMountHearts(canvas, mount, width / 2 + 91, height - gui.rightHeight, false);
-            gui.rightHeight += rows * MountHearts.ROW_HEIGHT;
+        boolean left = plan.hearts == HudPlan.Hearts.LEFT;
+        if (drawHearts) {
+            if (left) {
+                RidingHud.drawMountHearts(canvas, mount, width / 2 - 91, height - gui.leftHeight, true);
+                gui.leftHeight += rows * MountHearts.ROW_HEIGHT;
+            } else {
+                RidingHud.drawMountHearts(canvas, mount, width / 2 + 91, height - gui.rightHeight, false);
+                gui.rightHeight += rows * MountHearts.ROW_HEIGHT;
+            }
+        }
+        if (plan.stats) {
+            if (left) {
+                RidingHud.drawHudStats(canvas, mount, width / 2 - 91, height - gui.leftHeight, true);
+                gui.leftHeight += MountHearts.ROW_HEIGHT;
+            } else {
+                RidingHud.drawHudStats(canvas, mount, width / 2 + 91, height - gui.rightHeight, false);
+                gui.rightHeight += MountHearts.ROW_HEIGHT;
+            }
         }
     }
 }

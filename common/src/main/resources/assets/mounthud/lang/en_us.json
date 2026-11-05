@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "When the experience bar turns into the jump bar while riding a horse or camel.",
   "mounthud.option.jump_bar.auto": "While charging",
   "mounthud.option.jump_bar.always_jump": "Always (vanilla)",
-  "mounthud.option.jump_bar.always_experience": "Never"
+  "mounthud.option.jump_bar.always_experience": "Never",
+  "mounthud.option.mount_stats": "Mount stats",
+  "mounthud.option.mount_stats.tooltip": "Where to show the mount's speed, jump height and health.",
+  "mounthud.option.mount_stats.inventory": "In inventory",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD and inventory",
+  "mounthud.option.mount_stats.off": "Off",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/s",
+  "mounthud.stats.jump": "%s bl"
 }

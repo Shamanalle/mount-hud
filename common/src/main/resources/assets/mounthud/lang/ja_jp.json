@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "馬やラクダに乗っているとき、経験値バーがジャンプゲージに変わるタイミング。",
   "mounthud.option.jump_bar.auto": "溜めている間",
   "mounthud.option.jump_bar.always_jump": "常に（バニラ）",
-  "mounthud.option.jump_bar.always_experience": "表示しない"
+  "mounthud.option.jump_bar.always_experience": "表示しない",
+  "mounthud.option.mount_stats": "乗り物の能力",
+  "mounthud.option.mount_stats.tooltip": "乗り物の速度・ジャンプ高・体力をどこに表示するか。",
+  "mounthud.option.mount_stats.inventory": "インベントリのみ",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD とインベントリ",
+  "mounthud.option.mount_stats.off": "オフ",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s m/s",
+  "mounthud.stats.jump": "%s m"
 }

@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Quando la barra dell'esperienza diventa la barra del salto in sella a cavallo o cammello.",
   "mounthud.option.jump_bar.auto": "Durante la carica",
   "mounthud.option.jump_bar.always_jump": "Sempre (originale)",
-  "mounthud.option.jump_bar.always_experience": "Mai"
+  "mounthud.option.jump_bar.always_experience": "Mai",
+  "mounthud.option.mount_stats": "Statistiche",
+  "mounthud.option.mount_stats.tooltip": "Dove mostrare velocità, altezza di salto e salute della cavalcatura.",
+  "mounthud.option.mount_stats.inventory": "Nell'inventario",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD e inventario",
+  "mounthud.option.mount_stats.off": "No",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/s",
+  "mounthud.stats.jump": "%s bl"
 }

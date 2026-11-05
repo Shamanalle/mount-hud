@@ -51,10 +51,11 @@ public final class HudPlanner {
                     break;
             }
         }
+        boolean stats = heartRows > 0 && settings.mountStats.onHud();
         boolean vanilla = hunger == (heartRows == 0 && state.survivalBars)
                 && hearts == (heartRows == 0 ? HudPlan.Hearts.NONE : HudPlan.Hearts.VANILLA)
-                && bar == vanillaBar;
-        return new HudPlan(vanilla, hunger, hearts, heartRows, bar);
+                && bar == vanillaBar && !stats;
+        return new HudPlan(vanilla, hunger, hearts, heartRows, bar, stats);
     }
 
     private static HudPlan vanilla(HudState state, int heartRows, HudPlan.Bar bar) {
