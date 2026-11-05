@@ -1,9 +1,7 @@
 package com.kasper.mounthud.compat;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.CommonComponents;
@@ -17,17 +15,6 @@ public final class Widgets {
 
     public static Component text(String key) {
         return new TranslatableComponent(key);
-    }
-
-    public static AbstractWidget title(Font font, Component title, int x, int y, int width, int height) {
-        AbstractWidget widget = new AbstractWidget(x, y, width, height, title) {
-            @Override
-            public void renderButton(PoseStack pose, int mouseX, int mouseY, float partialTick) {
-                drawCenteredString(pose, font, getMessage(), this.x + this.width / 2, this.y, 0xFFFFFF);
-            }
-        };
-        widget.active = false;
-        return widget;
     }
 
     public static AbstractWidget onOff(int x, int y, int width, int height, Component label, Component tooltip,

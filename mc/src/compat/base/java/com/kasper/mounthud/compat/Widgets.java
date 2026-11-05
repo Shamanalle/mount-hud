@@ -2,11 +2,9 @@ package com.kasper.mounthud.compat;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
@@ -17,10 +15,6 @@ public final class Widgets {
 
     public static Component text(String key) {
         return Component.translatable(key);
-    }
-
-    public static AbstractWidget title(Font font, Component title, int x, int y, int width, int height) {
-        return new StringWidget(x, y, width, height, title, font);
     }
 
     public static AbstractWidget onOff(int x, int y, int width, int height, Component label, Component tooltip,

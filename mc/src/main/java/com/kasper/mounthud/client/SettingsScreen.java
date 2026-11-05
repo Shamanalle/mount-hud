@@ -33,7 +33,7 @@ public final class SettingsScreen extends ModScreen {
     protected void init() {
         int x = (width - WIDTH) / 2;
         int y = Math.max(24, height / 2 - 4 * ROW - 12);
-        addRenderableWidget(Widgets.title(font, title, x, y - 20, WIDTH, 12));
+        addTitle(x, y - 20, WIDTH, 12);
 
         addRenderableWidget(Widgets.onOff(x, y, WIDTH, 20,
                 Widgets.text("mounthud.option.enabled"),
