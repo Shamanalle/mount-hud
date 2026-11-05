@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Когда полоска опыта сменяется полоской прыжка верхом на лошади или верблюде.",
   "mounthud.option.jump_bar.auto": "Пока заряжаешь",
   "mounthud.option.jump_bar.always_jump": "Всегда (как в ванили)",
-  "mounthud.option.jump_bar.always_experience": "Никогда"
+  "mounthud.option.jump_bar.always_experience": "Никогда",
+  "mounthud.option.mount_stats": "Характеристики",
+  "mounthud.option.mount_stats.tooltip": "Где показывать скорость, высоту прыжка и здоровье животного.",
+  "mounthud.option.mount_stats.inventory": "В инвентаре",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD и инвентарь",
+  "mounthud.option.mount_stats.off": "Выкл",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s бл/с",
+  "mounthud.stats.jump": "%s бл"
 }

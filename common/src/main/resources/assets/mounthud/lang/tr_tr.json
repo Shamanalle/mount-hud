@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "At veya deveye binerken deneyim çubuğunun zıplama çubuğuna ne zaman dönüştüğü.",
   "mounthud.option.jump_bar.auto": "Zıplama doldurulurken",
   "mounthud.option.jump_bar.always_jump": "Her zaman (oyunun kendisi)",
-  "mounthud.option.jump_bar.always_experience": "Asla"
+  "mounthud.option.jump_bar.always_experience": "Asla",
+  "mounthud.option.mount_stats": "Binek nitelikleri",
+  "mounthud.option.mount_stats.tooltip": "Bineğin hızı, zıplama yüksekliği ve canının nerede gösterileceği.",
+  "mounthud.option.mount_stats.inventory": "Envanterde",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD ve envanter",
+  "mounthud.option.mount_stats.off": "Kapalı",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/sn",
+  "mounthud.stats.jump": "%s bl"
 }

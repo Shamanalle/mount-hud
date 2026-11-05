@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Kiedy pasek doświadczenia zmienia się w pasek skoku podczas jazdy na koniu lub wielbłądzie.",
   "mounthud.option.jump_bar.auto": "Podczas ładowania",
   "mounthud.option.jump_bar.always_jump": "Zawsze (zwykły)",
-  "mounthud.option.jump_bar.always_experience": "Nigdy"
+  "mounthud.option.jump_bar.always_experience": "Nigdy",
+  "mounthud.option.mount_stats": "Statystyki",
+  "mounthud.option.mount_stats.tooltip": "Gdzie pokazywać prędkość, wysokość skoku i zdrowie wierzchowca.",
+  "mounthud.option.mount_stats.inventory": "W ekwipunku",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD i ekwipunek",
+  "mounthud.option.mount_stats.off": "Wył.",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/s",
+  "mounthud.stats.jump": "%s bl"
 }

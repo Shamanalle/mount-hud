@@ -2,6 +2,7 @@ package com.kasper.mounthud.compat;
 
 import com.kasper.mounthud.client.HudSprite;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
@@ -34,5 +35,13 @@ public final class Canvas {
         RenderSystem.enableBlend();
         graphics.blitSprite(SPRITES[sprite.ordinal()], x, y, 9, 9);
         RenderSystem.disableBlend();
+    }
+
+    public int textWidth(String text) {
+        return Minecraft.getInstance().font.width(text);
+    }
+
+    public void text(String text, int x, int y, int color, boolean shadow) {
+        graphics.drawString(Minecraft.getInstance().font, text, x, y, color, shadow);
     }
 }

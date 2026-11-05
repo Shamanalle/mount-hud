@@ -28,13 +28,13 @@ abstract class HudMixin {
     @ModifyReturnValue(method = "getVisibleVehicleHeartRows", at = @At("RETURN"))
     private int mounthud$airRows(int rows) {
         HudPlan plan = RidingHud.plan();
-        return RidingHud.drawsMountHearts(plan) ? plan.airRowsUp : rows;
+        return RidingHud.drawsMountHearts(plan) || plan.stats ? plan.airRowsUp : rows;
     }
 
     @Inject(method = "renderVehicleHealth", at = @At("HEAD"))
     private void mounthud$mountHearts(GuiGraphics graphics, CallbackInfo info) {
         HudPlan plan = RidingHud.plan();
-        if (RidingHud.drawsMountHearts(plan)) {
+        if (RidingHud.drawsMountHearts(plan) || plan.stats) {
             RidingHud.drawMountHearts(new Canvas(graphics), plan);
         }
     }

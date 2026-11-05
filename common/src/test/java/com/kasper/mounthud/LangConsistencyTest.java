@@ -2,6 +2,7 @@ package com.kasper.mounthud;
 
 import com.kasper.mounthud.config.HeartsPosition;
 import com.kasper.mounthud.config.JumpBarMode;
+import com.kasper.mounthud.config.MountStatsMode;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -114,6 +115,9 @@ class LangConsistencyTest {
         }
         for (HeartsPosition position : HeartsPosition.values()) {
             used.add(position.key());
+        }
+        for (MountStatsMode mode : MountStatsMode.values()) {
+            used.add(mode.key());
         }
         Set<String> missing = new TreeSet<>(used);
         missing.removeAll(english);

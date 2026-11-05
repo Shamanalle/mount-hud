@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "말이나 낙타를 탈 때 경험치 막대가 점프 막대로 바뀌는 때.",
   "mounthud.option.jump_bar.auto": "충전하는 동안",
   "mounthud.option.jump_bar.always_jump": "항상 (기본)",
-  "mounthud.option.jump_bar.always_experience": "표시 안 함"
+  "mounthud.option.jump_bar.always_experience": "표시 안 함",
+  "mounthud.option.mount_stats": "탈것 능력치",
+  "mounthud.option.mount_stats.tooltip": "탈것의 속도, 점프 높이, 체력을 어디에 표시할지 정합니다.",
+  "mounthud.option.mount_stats.inventory": "보관함",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD 및 보관함",
+  "mounthud.option.mount_stats.off": "끔",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/s",
+  "mounthud.stats.jump": "%s bl"
 }

@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "骑马或骆驼时，经验条何时变成跳跃条。",
   "mounthud.option.jump_bar.auto": "蓄力时",
   "mounthud.option.jump_bar.always_jump": "总是（原版）",
-  "mounthud.option.jump_bar.always_experience": "从不"
+  "mounthud.option.jump_bar.always_experience": "从不",
+  "mounthud.option.mount_stats": "坐骑属性",
+  "mounthud.option.mount_stats.tooltip": "在何处显示坐骑的速度、跳跃高度和生命值。",
+  "mounthud.option.mount_stats.inventory": "物品栏中",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD 和物品栏",
+  "mounthud.option.mount_stats.off": "关闭",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s 格/秒",
+  "mounthud.stats.jump": "%s 格"
 }

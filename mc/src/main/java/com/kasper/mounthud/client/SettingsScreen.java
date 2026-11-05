@@ -5,6 +5,7 @@ import com.kasper.mounthud.compat.Screens;
 import com.kasper.mounthud.compat.Widgets;
 import com.kasper.mounthud.config.HeartsPosition;
 import com.kasper.mounthud.config.JumpBarMode;
+import com.kasper.mounthud.config.MountStatsMode;
 import com.kasper.mounthud.config.Settings;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
@@ -34,7 +35,7 @@ public final class SettingsScreen extends Screen {
     @Override
     protected void init() {
         int x = (width - WIDTH) / 2;
-        int y = Math.max(24, height / 2 - 4 * ROW);
+        int y = Math.max(24, height / 2 - 4 * ROW - 12);
         addRenderableWidget(new StringWidget(x, y - 20, WIDTH, 12, title, font));
 
         addRenderableWidget(CycleButton.onOffBuilder(settings.enabled)
@@ -64,6 +65,13 @@ public final class SettingsScreen extends Screen {
                 .withTooltip(value -> tooltip("mounthud.option.jump_bar.tooltip"))
                 .create(x, y, WIDTH, 20, Component.translatable("mounthud.option.jump_bar"),
                         (button, value) -> settings.jumpBar = value));
+        y += ROW;
+        addRenderableWidget(Widgets.<MountStatsMode>cycle(
+                        value -> Component.translatable(value.key()), settings.mountStats)
+                .withValues(MountStatsMode.values())
+                .withTooltip(value -> tooltip("mounthud.option.mount_stats.tooltip"))
+                .create(x, y, WIDTH, 20, Component.translatable("mounthud.option.mount_stats"),
+                        (button, value) -> settings.mountStats = value));
         y += ROW + 12;
 
         int half = (WIDTH - 4) / 2;

@@ -1,6 +1,7 @@
 package com.kasper.mounthud.compat;
 
 import com.kasper.mounthud.client.HudSprite;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -32,5 +33,13 @@ public final class Canvas {
     /** Draws a 9x9 HUD sprite. */
     public void sprite(HudSprite sprite, int x, int y) {
         graphics.blitSprite(RenderType::guiTextured, SPRITES[sprite.ordinal()], x, y, 9, 9);
+    }
+
+    public int textWidth(String text) {
+        return Minecraft.getInstance().font.width(text);
+    }
+
+    public void text(String text, int x, int y, int color, boolean shadow) {
+        graphics.drawString(Minecraft.getInstance().font, text, x, y, color, shadow);
     }
 }

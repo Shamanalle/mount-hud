@@ -39,6 +39,7 @@ public final class SettingsFile {
         s.hungerWhileRiding = bool(p, "hunger_while_riding", s.hungerWhileRiding);
         s.heartsPosition = choice(p, "hearts_position", HeartsPosition.class, s.heartsPosition);
         s.jumpBar = choice(p, "jump_bar", JumpBarMode.class, s.jumpBar);
+        s.mountStats = choice(p, "mount_stats", MountStatsMode.class, s.mountStats);
         return s;
     }
 
@@ -49,6 +50,7 @@ public final class SettingsFile {
         line(out, "Hunger stays visible while riding a horse, pig, camel, strider...: true or false", "hunger_while_riding", s.hungerWhileRiding);
         line(out, "Where the mount's hearts go while hunger is shown: above_hunger or left", "hearts_position", lower(s.heartsPosition));
         line(out, "Bar above the hotbar while riding a mount that jumps: auto (experience, the jump bar while charging), always_jump or always_experience", "jump_bar", lower(s.jumpBar));
+        line(out, "Where the mount's speed, jump height and health are shown: inventory, hud_and_inventory or off", "mount_stats", lower(s.mountStats));
         Path dir = path.getParent();
         if (dir != null) {
             Files.createDirectories(dir);

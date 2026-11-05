@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Quando a barra de experiência vira a barra de salto ao montar um cavalo ou camelo.",
   "mounthud.option.jump_bar.auto": "Ao carregar o salto",
   "mounthud.option.jump_bar.always_jump": "Sempre (original)",
-  "mounthud.option.jump_bar.always_experience": "Nunca"
+  "mounthud.option.jump_bar.always_experience": "Nunca",
+  "mounthud.option.mount_stats": "Atributos",
+  "mounthud.option.mount_stats.tooltip": "Onde mostrar a velocidade, a altura do salto e a vida da montaria.",
+  "mounthud.option.mount_stats.inventory": "No inventário",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD e inventário",
+  "mounthud.option.mount_stats.off": "Não",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/s",
+  "mounthud.stats.jump": "%s bl"
 }

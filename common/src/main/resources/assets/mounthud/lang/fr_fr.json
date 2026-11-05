@@ -14,5 +14,13 @@
   "mounthud.option.jump_bar.tooltip": "Quand la barre d'expérience devient la barre de saut sur un cheval ou un dromadaire.",
   "mounthud.option.jump_bar.auto": "Pendant la charge",
   "mounthud.option.jump_bar.always_jump": "Toujours (jeu de base)",
-  "mounthud.option.jump_bar.always_experience": "Jamais"
+  "mounthud.option.jump_bar.always_experience": "Jamais",
+  "mounthud.option.mount_stats": "Stats de monture",
+  "mounthud.option.mount_stats.tooltip": "Où afficher la vitesse, la hauteur de saut et la vie de la monture.",
+  "mounthud.option.mount_stats.inventory": "Inventaire",
+  "mounthud.option.mount_stats.hud_and_inventory": "HUD et inventaire",
+  "mounthud.option.mount_stats.off": "Non",
+  "mounthud.stats.health": "♥ %s",
+  "mounthud.stats.speed": "%s bl/s",
+  "mounthud.stats.jump": "%s bl"
 }

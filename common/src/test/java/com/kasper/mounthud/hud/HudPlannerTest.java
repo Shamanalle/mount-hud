@@ -2,6 +2,7 @@ package com.kasper.mounthud.hud;
 
 import com.kasper.mounthud.config.HeartsPosition;
 import com.kasper.mounthud.config.JumpBarMode;
+import com.kasper.mounthud.config.MountStatsMode;
 import com.kasper.mounthud.config.Settings;
 import org.junit.jupiter.api.Test;
 
@@ -102,5 +103,20 @@ class HudPlannerTest {
         assertFalse(plan.hunger);
         assertEquals(HudPlan.Hearts.VANILLA, plan.hearts);
         assertEquals(HudPlan.Bar.JUMP, plan.bar);
+        assertFalse(plan.stats);
+    }
+
+    @Test
+    void hudStatsShiftAirRowOnTheRightOnly() {
+        Settings s = new Settings();
+        s.mountStats = MountStatsMode.HUD_AND_INVENTORY;
+        HudPlan right = HudPlanner.plan(s, horse(0));
+        assertTrue(right.stats);
+        assertEquals(3, right.airRowsUp);
+
+        s.heartsPosition = HeartsPosition.LEFT;
+        HudPlan left = HudPlanner.plan(s, horse(0));
+        assertTrue(left.stats);
+        assertEquals(0, left.airRowsUp);
     }
 }
