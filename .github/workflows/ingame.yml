@@ -85,12 +85,16 @@ jobs:
       matrix:
         include:
           - { loader: forge, mc: "1.20.1" }
+          - { loader: neoforge, mc: "1.20.6" }
           - { loader: neoforge, mc: "1.21" }
           - { loader: neoforge, mc: "1.21.1" }
           - { loader: neoforge, mc: "1.21.4" }
           - { loader: neoforge, mc: "1.21.11" }
           - { loader: neoforge, mc: "26.1" }
           - { loader: neoforge, mc: "26.3" }
+          - { loader: fabric, mc: "1.20.1" }
+          - { loader: fabric, mc: "1.20.4" }
+          - { loader: fabric, mc: "1.20.6" }
           - { loader: fabric, mc: "1.21" }
           - { loader: fabric, mc: "1.21.1" }
           - { loader: fabric, mc: "1.21.2" }

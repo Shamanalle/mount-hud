@@ -8,16 +8,13 @@
 Клиентский HUD для езды верхом на Forge, NeoForge и Fabric.
 
 [![Build](https://github.com/Shamanalle/mount-hud/actions/workflows/build.yml/badge.svg)](https://github.com/Shamanalle/mount-hud/actions/workflows/build.yml)
-![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1%20%7C%201.21.x%20%7C%2026.x-62b47a)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.16.5%20%E2%80%93%2026.3-62b47a)
 ![Loaders](https://img.shields.io/badge/loaders-Forge%20%7C%20NeoForge%20%7C%20Fabric%20%7C%20Quilt-d08a3e)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 [English](README.md) · **Русский**
 
 </div>
-
-> **В разработке.** Первый релиз готовится, скачать пока нечего. Здесь описано, что делает мод; скриншоты, файлы и
-> настройки появятся по мере готовности.
 
 ## Что делает мод
 
@@ -34,14 +31,24 @@ Mount HUD оставляет обе:
 
 Мод меняет только ваш интерфейс: на сервере он не нужен и работает на любом сервере.
 
+![Сердца животного над голодом и полоска опыта при езде](docs/images/above-hunger.png)
+
+![Характеристики лошади в окне инвентаря](docs/images/inventory.png)
+
+## Версии и файлы
+
+Три файла покрывают все поддерживаемые загрузчики и версии Minecraft:
+
+| Файл | Загрузчик | Версии Minecraft | Примечания |
+|---|---|---|---|
+| `mount-hud-fabric-<версия>+mc1.16.5-26.3.jar` | Fabric, Quilt | 1.16.5 – 1.21.11, 26.1 – 26.3 | Fabric API не требуется; [Mod Menu](https://modrinth.com/mod/modmenu) необязателен (для экрана настроек) |
+| `mount-hud-forge-<версия>+mc1.17.1-1.20.1.jar` | Forge, NeoForge 1.20.1 | 1.17.1 – 1.20.1 | — |
+| `mount-hud-neoforge-<версия>+mc1.20.5-26.3.jar` | NeoForge | 1.20.5 – 1.21.11, 26.1 – 26.3 | — |
+
 ## Совместимость
 
 - **AppleSkin** — насыщение, истощение и предпросмотр восстановления сытости от еды в руке рисуются на полоске голода при езде на Fabric, Forge и NeoForge.
 - **Raised** — сердца животного, полоска голода, полоска опыта/прыжка и строка характеристик автоматически сдвигаются вместе с остальным HUD.
-
-## В планах
-
-- Все версии Minecraft от 1.16.5 до 26.3 на Forge, NeoForge и Fabric, в как можно меньшем числе файлов.
 
 ## Настройки
 

@@ -1,0 +1,49 @@
+package com.kasper.mounthud.compat;
+
+import com.kasper.mounthud.client.HudSprite;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
+
+/** The HUD's drawing surface (Minecraft 1.17.1 - 1.19.4: PoseStack + GuiComponent.blit). */
+public final class Canvas {
+    private static final ResourceLocation ICONS = new ResourceLocation("textures/gui/icons.png");
+
+    private final PoseStack pose;
+
+    public Canvas(PoseStack pose) {
+        this.pose = pose;
+    }
+
+    public int width() {
+        return Minecraft.getInstance().getWindow().getGuiScaledWidth();
+    }
+
+    public int height() {
+        return Minecraft.getInstance().getWindow().getGuiScaledHeight();
+    }
+
+    /** Draws a 9x9 HUD sprite. */
+    public void sprite(HudSprite sprite, int x, int y) {
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderTexture(0, ICONS);
+        GuiComponent.blit(pose, x, y, sprite.u, sprite.v, 9, 9, 256, 256);
+        RenderSystem.disableBlend();
+    }
+
+    public int textWidth(String text) {
+        return Minecraft.getInstance().font.width(text);
+    }
+
+    public void text(String text, int x, int y, int color, boolean shadow) {
+        Font font = Minecraft.getInstance().font;
+        if (shadow) {
+            font.drawShadow(pose, text, x, y, color);
+        } else {
+            font.draw(pose, text, x, y, color);
+        }
+    }
+}

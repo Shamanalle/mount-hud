@@ -8,16 +8,13 @@
 A client-side riding HUD for Forge, NeoForge and Fabric.
 
 [![Build](https://github.com/Shamanalle/mount-hud/actions/workflows/build.yml/badge.svg)](https://github.com/Shamanalle/mount-hud/actions/workflows/build.yml)
-![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1%20%7C%201.21.x%20%7C%2026.x-62b47a)
+![Minecraft](https://img.shields.io/badge/Minecraft-1.16.5%20%E2%80%93%2026.3-62b47a)
 ![Loaders](https://img.shields.io/badge/loaders-Forge%20%7C%20NeoForge%20%7C%20Fabric%20%7C%20Quilt-d08a3e)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 **English** · [Русский](README.ru.md)
 
 </div>
-
-> **In development.** The first release is being prepared; there are no downloads yet. This page describes what the
-> mod does and will be filled in with screenshots, files and settings as they land.
 
 ## What it does
 
@@ -34,14 +31,24 @@ Mount HUD keeps both:
 
 The mod only changes your HUD: it is not needed on the server, and works on any server.
 
+![Mount hearts above hunger and experience bar while riding](docs/images/above-hunger.png)
+
+![Horse stats in the inventory screen](docs/images/inventory.png)
+
+## Versions and files
+
+Three files cover every supported loader and Minecraft version:
+
+| File | Loader | Minecraft versions | Notes |
+|---|---|---|---|
+| `mount-hud-fabric-<version>+mc1.16.5-26.3.jar` | Fabric, Quilt | 1.16.5 – 1.21.11, 26.1 – 26.3 | Fabric API is not required; [Mod Menu](https://modrinth.com/mod/modmenu) is optional for the settings screen |
+| `mount-hud-forge-<version>+mc1.17.1-1.20.1.jar` | Forge, NeoForge 1.20.1 | 1.17.1 – 1.20.1 | — |
+| `mount-hud-neoforge-<version>+mc1.20.5-26.3.jar` | NeoForge | 1.20.5 – 1.21.11, 26.1 – 26.3 | — |
+
 ## Compatibility
 
 - **AppleSkin** — saturation, hunger exhaustion and food restoration previews are drawn on the hunger bar while riding on Fabric, Forge and NeoForge.
 - **Raised** — the mount's hearts, hunger bar, experience/jump bar and HUD stats follow the HUD offset automatically.
-
-## Planned
-
-- Every Minecraft version from 1.16.5 to 26.3 on Forge, NeoForge and Fabric, in as few files as possible.
 
 ## Settings
 

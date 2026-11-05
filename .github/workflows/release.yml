@@ -1,9 +1,9 @@
 name: Publish Release
 
-# Publishes the release for mod_version from gradle.properties: builds every jar, takes the notes
-# from CHANGELOG.md and attaches the jars. Starts either from a pushed tag (vX.Y.Z) or by hand
-# (Actions -> Publish Release -> Run workflow on main), in which case the tag is created too.
-# Then the files go to Modrinth and CurseForge through publish.yml.
+# Publishes the release for mod_version from gradle.properties: builds every jar, packs them into the universal
+# jars of versions/bundles.txt, takes the notes from CHANGELOG.md and attaches the bundled jars. Starts either
+# from a pushed tag (vX.Y.Z) or by hand (Actions -> Publish Release -> Run workflow on main), in which case the
+# tag is created too. Then the files go to Modrinth and CurseForge through publish.yml.
 
 on:
   push:
@@ -121,25 +121,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
       - name: Download jars
         uses: actions/download-artifact@v4
         with:
           pattern: jars-*
           merge-multiple: true
           path: dist
-      - name: Keep shared jars
+      - name: Check shared jars and build bundles
         run: |
-          version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
-          while IFS=: read -r loader group; do
-            loader=$(echo "${loader}" | tr -d '[:space:]')
-            [ -z "${loader}" ] || [ "${loader#\#}" != "${loader}" ] && continue
-            read -r -a vers <<< "${group}"
-            last="${vers[$((${#vers[@]} - 1))]}"
-            for ((i = 0; i < ${#vers[@]} - 1; i++)); do
-              rm -f "dist/mount-hud-${loader}-${version}+mc${vers[$i]}.jar"
-            done
-          done < versions/shared-jars.txt
-          ls -la dist/
+          python3 .github/scripts/release_groups.py check dist release-jars
+          python3 .github/scripts/bundle.py release-jars bundled-jars
+          ls -la bundled-jars/
       - name: Release notes from CHANGELOG.md
         run: bash .github/scripts/release-notes.sh "${{ needs.unit.outputs.tag }}" > release_body.md
       - name: Create GitHub release
@@ -148,7 +145,7 @@ jobs:
           tag_name: ${{ needs.unit.outputs.tag }}
           target_commitish: ${{ github.sha }}
           name: ${{ needs.unit.outputs.name }}
-          files: dist/*.jar
+          files: bundled-jars/*.jar
           body_path: release_body.md
           fail_on_unmatched_files: true
         env:
