@@ -1,0 +1,88 @@
+name: Publish to Modrinth & CurseForge
+
+# Uploads the jars of one GitHub release to Modrinth and CurseForge. The files are downloaded from the
+# release, so the stores get exactly what GitHub has. Runs after "Publish Release", or by hand
+# (Actions -> Publish to Modrinth & CurseForge -> Run workflow) for a tag that already has a release.
+#
+# Project ids live in .github/publish.json (read from the workflow's own commit, so a tag released
+# before the file existed can still be uploaded); the tokens are the MODRINTH_TOKEN and CURSEFORGE_TOKEN
+# secrets. A store whose id or token is missing is skipped with a warning.
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag, e.g. v0.1.0'
+        type: string
+        required: true
+      stores:
+        description: 'Where to upload'
+        type: choice
+        options: [both, modrinth, curseforge]
+        default: both
+
+permissions:
+  contents: read
+
+jobs:
+  config:
+    name: Check settings
+    runs-on: ubuntu-latest
+    outputs:
+      modrinth: ${{ steps.ids.outputs.modrinth }}
+      curseforge: ${{ steps.ids.outputs.curseforge }}
+      channel: ${{ steps.ids.outputs.channel }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
+      - name: Read project ids and tokens
+        id: ids
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          STORES: ${{ inputs.stores || 'both' }}
+        run: |
+          modrinth=$(jq -r '.modrinth // ""' .github/publish.json)
+          curseforge=$(jq -r '.curseforge // ""' .github/publish.json)
+          if [ -z "${modrinth}" ] || [ -z "${MODRINTH_TOKEN}" ]; then
+            echo "::warning::Modrinth skipped: set \"modrinth\" in .github/publish.json and the MODRINTH_TOKEN secret"
+            modrinth=""
+          fi
+          if [ -z "${curseforge}" ] || [ -z "${CURSEFORGE_TOKEN}" ]; then
+            echo "::warning::CurseForge skipped: set \"curseforge\" in .github/publish.json and the CURSEFORGE_TOKEN secret"
+            curseforge=""
+          fi
+          case "${STORES}" in
+            modrinth) curseforge="" ;;
+            curseforge) modrinth="" ;;
+          esac
+          echo "modrinth=${modrinth}" >> "$GITHUB_OUTPUT"
+          echo "curseforge=${curseforge}" >> "$GITHUB_OUTPUT"
+          echo "channel=$(jq -r '.channel // "release"' .github/publish.json)" >> "$GITHUB_OUTPUT"
+
+  publish:
+    name: Upload release files
+    needs: config
+    if: needs.config.outputs.modrinth != '' || needs.config.outputs.curseforge != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download release jars and notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          mkdir -p dist
+          gh release download "${TAG}" --pattern 'mount-hud-*.jar' --dir dist
+          bash .github/scripts/release-notes.sh "${TAG}" > dist/notes.md
+          ls -la dist/

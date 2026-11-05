@@ -99,7 +99,7 @@ class LangConsistencyTest {
                 continue;
             }
             try (Stream<Path> files = Files.walk(src)) {
-                for (Path f : files.filter(p -> p.toString().endsWith(".java") && !p.toString().contains("/test/"))
+                for (Path f : files.filter(p -> p.toString().endsWith(".java") && !p.toString().replace('\\', '/').contains("/test/"))
                         .collect(Collectors.toList())) {
                     Matcher m = KEY_IN_CODE.matcher(new String(Files.readAllBytes(f), StandardCharsets.UTF_8));
                     while (m.find()) {

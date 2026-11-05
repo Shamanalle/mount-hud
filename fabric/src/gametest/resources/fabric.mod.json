@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "mounthud-gametest",
+  "version": "1.0.0",
+  "name": "Mount HUD Game Tests",
+  "description": "In-game tests for Mount HUD. Only used by the test run, never shipped.",
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": [
+      "com.kasper.mounthud.gametest.MountHudGameTest"
+    ]
+  },
+  "depends": {
+    "mounthud": "*",
+    "fabric-client-gametest-api-v1": "*"
+  }
+}
