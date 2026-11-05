@@ -41,7 +41,7 @@ The mod only changes your HUD: it is not needed on the server, and works on any 
 
 ## Settings
 
-`config/mounthud.properties`, also changed on the settings screen (to come: Mod Menu on Fabric, the Mods list on Forge and NeoForge).
+`config/mounthud.properties`, also changed on the settings screen: through Mod Menu on Fabric, the Config button in the Mods list on Forge and NeoForge.
 
 | Setting | Values | Default | What it does |
 |---|---|---|---|

@@ -14,7 +14,8 @@
   "icon": "assets/mounthud/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": ["com.kasper.mounthud.fabric.MountHudFabric"]
+    "client": ["com.kasper.mounthud.fabric.MountHudFabric"],
+    "modmenu": ["com.kasper.mounthud.fabric.ModMenuEntry"]
   },
   "mixins": ["mounthud.mixins.json"],
   "depends": {

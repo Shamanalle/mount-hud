@@ -27,3 +27,6 @@ type = "required"
 versionRange = "${minecraft_range}"
 ordering = "NONE"
 side = "CLIENT"
+
+[[mixins]]
+config = "mounthud.mixins.json"

@@ -13,5 +13,6 @@ public final class MountHudFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         MountHud.init(FabricLoader.getInstance().getConfigDir(), LOG::warn);
+        LOG.info("{} initialized", MountHud.NAME);
     }
 }
