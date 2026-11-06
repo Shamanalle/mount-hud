@@ -33,7 +33,7 @@ body:
     attributes:
       label: "Mount HUD version / Версия Mount HUD"
       description: "The file name from your mods folder / Имя файла из папки mods"
-      placeholder: "mount-hud-forge-0.1.0+mc1.20.1.jar"
+      placeholder: "mount-hud-forge-1.0.0+mc1.17.1-1.20.1.jar"
     validations:
       required: true
 
