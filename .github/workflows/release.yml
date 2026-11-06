@@ -86,6 +86,7 @@ jobs:
   build:
     name: Build ${{ matrix.mc }}
     needs: unit
+    if: ${{ !cancelled() && needs.unit.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -115,6 +116,7 @@ jobs:
   release:
     name: Publish release
     needs: [unit, build]
+    if: ${{ !cancelled() && needs.unit.result == 'success' && needs.build.result == 'success' }}
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ needs.unit.outputs.tag }}
