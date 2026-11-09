@@ -37,7 +37,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
     private static final List<String> TRANSLATIONS = List.of(
             "de_de", "es_es", "fr_fr", "it_it", "ja_jp", "ko_kr", "pl_pl", "pt_br", "tr_tr", "uk_ua", "zh_cn");
     /** The horse has 30 health (two rows of mount hearts), 0.225 speed (9.7 bl/s) and 0.7 jump strength (2.9 bl). */
-    private static final String HORSE = "minecraft:horse 0.5 -60 2.5 {Tame:1b,Health:23f,"
+    private static final String HORSE = "minecraft:horse 0.5 -60 2.5 {Tame:1b,Variant:3,Rotation:[0f,0f],Health:23f,"
             + "attributes:[{id:\"minecraft:max_health\",base:30d},"
             + "{id:\"minecraft:movement_speed\",base:0.225d},"
             + "{id:\"minecraft:jump_strength\",base:0.7d}],"
@@ -113,6 +113,8 @@ public final class MountHudGameTest implements FabricClientGameTest {
 
     private void left(ClientGameTestContext context, TestServerContext server, String prefix) {
         server.runCommand("item replace entity @a armor.chest with minecraft:iron_chestplate");
+        server.runCommand("item replace entity @a armor.legs with minecraft:iron_leggings");
+        server.runCommand("item replace entity @a armor.feet with minecraft:iron_boots");
         context.waitTicks(3);
         apply(context, s -> s.heartsPosition = HeartsPosition.LEFT);
         BufferedImage modded = shot(context, prefix + "left");
@@ -122,6 +124,8 @@ public final class MountHudGameTest implements FabricClientGameTest {
         apply(context, s -> s.enabled = false);
         BufferedImage vanilla = shot(context, prefix + "left_vanilla");
         server.runCommand("item replace entity @a armor.chest with minecraft:air");
+        server.runCommand("item replace entity @a armor.legs with minecraft:air");
+        server.runCommand("item replace entity @a armor.feet with minecraft:air");
         expect(row.hearts(modded) > row.minHearts(), "no mount hearts above the armor (" + row.hearts(modded) + " heart pixels)");
         expect(row.hearts(vanilla) < row.minHearts(), "the vanilla HUD has hearts above the armor, the check looks at the wrong place");
     }
@@ -192,35 +196,160 @@ public final class MountHudGameTest implements FabricClientGameTest {
 
     /** The pictures for the project pages, 3840x2160 at a large GUI scale so the HUD reads at a glance. */
     private void storeScreenshots(ClientGameTestContext context, TestServerContext server) {
+        context.runOnClient(mc -> mc.options.renderDistance().set(8));
+        buildStoreScene(server);
         context.getInput().resizeWindow(3840, 2160);
-        context.runOnClient(mc -> TestCompat.guiScale(mc, STORE_GUI_SCALE));
-        context.waitTicks(5);
-        apply(context, s -> s.heartsPosition = HeartsPosition.ABOVE_HUNGER);
+        context.runOnClient(mc -> {
+            TestCompat.guiScale(mc, STORE_GUI_SCALE);
+            mc.player.setYRot(0);
+            mc.player.setXRot(8);
+        });
+        context.waitTicks(20);
+
+        apply(context, s -> {
+            s.heartsPosition = HeartsPosition.ABOVE_HUNGER;
+            s.mountStats = MountStatsMode.HUD_AND_INVENTORY;
+        });
         shot(context, "store_above_hunger");
+
         context.getInput().holdKey(options -> options.keyJump);
         context.waitTicks(8);
         shot(context, "store_jump_bar");
         context.getInput().releaseKey(options -> options.keyJump);
         context.waitTicks(30);
-        server.runCommand("item replace entity @a armor.chest with minecraft:iron_chestplate");
+
+        context.runOnClient(mc -> {
+            mc.player.setYRot(0);
+            mc.player.setXRot(8);
+        });
+        context.waitTicks(2);
         apply(context, s -> s.heartsPosition = HeartsPosition.LEFT);
         shot(context, "store_left");
-        server.runCommand("item replace entity @a armor.chest with minecraft:air");
+
         apply(context, s -> s.enabled = false);
         shot(context, "store_vanilla");
+
+        server.runCommand("item replace entity @e[type=minecraft:horse,limit=1] armor.body with minecraft:diamond_horse_armor");
         apply(context, s -> { });
         context.runOnClient(mc -> mc.player.sendOpenInventory());
         context.waitFor(mc -> TestCompat.screen(mc) instanceof HorseInventoryScreen, 200);
-        context.waitTicks(2);
+        context.waitTicks(3);
         context.takeScreenshot("store_inventory");
         context.runOnClient(mc -> mc.player.closeContainer());
-        context.waitTicks(2);
+        server.runCommand("item replace entity @e[type=minecraft:horse,limit=1] armor.body with minecraft:air");
+        context.waitTicks(3);
+
         context.setScreen(() -> new SettingsScreen(null));
         context.takeScreenshot("store_settings");
         context.setScreen(() -> null);
         context.runOnClient(mc -> TestCompat.guiScale(mc, 0));
         context.getInput().resizeWindow(854, 480);
         context.waitTicks(2);
+    }
+
+    /** Builds a countryside road, paddock, pond, trees and hills in front of the player for store screenshots. */
+    private static void buildStoreScene(TestServerContext server) {
+        server.runCommand("item replace entity @a armor.chest with minecraft:iron_chestplate");
+        server.runCommand("item replace entity @a armor.legs with minecraft:iron_leggings");
+        server.runCommand("item replace entity @a armor.feet with minecraft:iron_boots");
+
+        // Rolling hills on the horizon (z = 22..42) with staggered grass edges so the skyline looks organic
+        server.runCommand("fill 4 -60 23 26 -60 39 minecraft:grass_block");
+        server.runCommand("fill 7 -60 21 19 -60 23 minecraft:grass_block");
+        server.runCommand("fill 6 -59 25 24 -59 37 minecraft:grass_block");
+        server.runCommand("fill 9 -59 23 17 -59 25 minecraft:grass_block");
+        server.runCommand("fill 9 -58 27 21 -58 35 minecraft:grass_block");
+
+        server.runCommand("fill -26 -60 23 -4 -60 39 minecraft:grass_block");
+        server.runCommand("fill -18 -60 21 -7 -60 23 minecraft:grass_block");
+        server.runCommand("fill -24 -59 25 -6 -59 37 minecraft:grass_block");
+        server.runCommand("fill -16 -59 23 -9 -59 25 minecraft:grass_block");
+        server.runCommand("fill -20 -58 27 -9 -58 35 minecraft:grass_block");
+
+        server.runCommand("fill -6 -60 27 6 -60 40 minecraft:grass_block");
+        server.runCommand("fill -4 -59 30 4 -59 38 minecraft:grass_block");
+
+        // Winding country road heading South (+Z)
+        server.runCommand("fill -1 -61 0 1 -61 15 minecraft:dirt_path");
+        server.runCommand("fill -2 -61 13 0 -61 26 minecraft:dirt_path");
+        server.runCommand("setblock 0 -61 7 minecraft:coarse_dirt");
+        server.runCommand("setblock -1 -61 10 minecraft:coarse_dirt");
+        server.runCommand("setblock 1 -61 12 minecraft:mossy_cobblestone");
+        server.runCommand("setblock -1 -61 16 minecraft:coarse_dirt");
+        server.runCommand("setblock -2 -61 20 minecraft:mossy_cobblestone");
+
+        // Left side (+X): oak fence paddock with hay bales, water trough and a saddled camel
+        server.runCommand("fill 4 -60 7 11 -60 15 minecraft:oak_fence replace minecraft:air");
+        server.runCommand("fill 5 -60 8 10 -60 14 minecraft:air");
+        server.runCommand("setblock 4 -60 10 minecraft:oak_fence_gate[facing=west,open=false]");
+        server.runCommand("setblock 4 -59 7 minecraft:lantern");
+        server.runCommand("setblock 4 -59 15 minecraft:lantern");
+        server.runCommand("setblock 11 -59 7 minecraft:lantern");
+        server.runCommand("setblock 5 -60 8 minecraft:water_cauldron[level=3]");
+        server.runCommand("setblock 5 -60 9 minecraft:water_cauldron[level=3]");
+        server.runCommand("setblock 9 -60 13 minecraft:hay_block[axis=y]");
+        server.runCommand("setblock 10 -60 13 minecraft:hay_block[axis=x]");
+        server.runCommand("setblock 10 -59 13 minecraft:hay_block[axis=y]");
+        server.runCommand("setblock 10 -60 14 minecraft:hay_block[axis=z]");
+        server.runCommand("summon minecraft:camel 7.5 -60 11.2 {NoAI:1b,Tame:1b,Rotation:[140f,4f],"
+                + "SaddleItem:{id:\"minecraft:saddle\",count:1},equipment:{saddle:{id:\"minecraft:saddle\",count:1}}}");
+
+        // Right side (-X): roadside lamp post, small pond with sugar cane, barrel, hay bales and a second horse
+        server.runCommand("fill -3 -60 8 -3 -58 8 minecraft:oak_fence");
+        server.runCommand("setblock -2 -58 8 minecraft:oak_fence");
+        server.runCommand("setblock -2 -59 8 minecraft:lantern[hanging=true]");
+        server.runCommand("fill -8 -61 9 -5 -61 13 minecraft:water");
+        server.runCommand("setblock -6 -60 10 minecraft:lily_pad");
+        server.runCommand("setblock -7 -60 12 minecraft:lily_pad");
+        server.runCommand("setblock -8 -61 8 minecraft:mossy_cobblestone");
+        server.runCommand("setblock -5 -61 9 minecraft:coarse_dirt");
+        server.runCommand("setblock -9 -61 10 minecraft:sand");
+        server.runCommand("fill -9 -60 10 -9 -59 10 minecraft:sugar_cane");
+        server.runCommand("fill -9 -60 11 -9 -58 11 minecraft:sugar_cane");
+        server.runCommand("setblock -4 -60 15 minecraft:barrel[facing=up]");
+        server.runCommand("setblock -5 -60 15 minecraft:hay_block[axis=y]");
+        server.runCommand("setblock -5 -60 16 minecraft:hay_block[axis=z]");
+        server.runCommand("summon minecraft:horse -4.2 -60 12.8 {NoAI:1b,Tame:1b,Variant:258,Rotation:[-145f,4f],"
+                + "SaddleItem:{id:\"minecraft:saddle\",count:1},equipment:{saddle:{id:\"minecraft:saddle\",count:1},"
+                + "body:{id:\"minecraft:golden_horse_armor\",count:1}}}");
+
+        // Trees framing the scene on both sides and on the background hills
+        plantTree(server, 13, -60, 13, "minecraft:oak_log", "minecraft:oak_leaves[persistent=true]");
+        plantTree(server, -11, -60, 14, "minecraft:birch_log", "minecraft:birch_leaves[persistent=true]");
+        plantTree(server, 9, -57, 28, "minecraft:oak_log", "minecraft:oak_leaves[persistent=true]");
+        plantTree(server, 17, -58, 25, "minecraft:birch_log", "minecraft:birch_leaves[persistent=true]");
+        plantTree(server, -11, -58, 28, "minecraft:oak_log", "minecraft:oak_leaves[persistent=true]");
+        plantTree(server, -18, -59, 24, "minecraft:oak_log", "minecraft:oak_leaves[persistent=true]");
+        plantTree(server, 2, -58, 33, "minecraft:birch_log", "minecraft:birch_leaves[persistent=true]");
+
+        // Wildflowers and meadow grass
+        int[][] grassSpots = {
+                {3, 5}, {2, 9}, {3, 12}, {2, 16}, {4, 18}, {6, 19}, {8, 18},
+                {-3, 6}, {-4, 7}, {-3, 11}, {-3, 18}, {-6, 17}, {-8, 16}
+        };
+        for (int[] g : grassSpots) {
+            server.runCommand("setblock " + g[0] + " -60 " + g[1] + " minecraft:short_grass");
+        }
+        server.runCommand("setblock 3 -60 6 minecraft:dandelion");
+        server.runCommand("setblock 2 -60 11 minecraft:poppy");
+        server.runCommand("setblock 5 -60 17 minecraft:cornflower");
+        server.runCommand("setblock -4 -60 6 minecraft:oxeye_daisy");
+        server.runCommand("setblock -3 -60 14 minecraft:dandelion");
+        server.runCommand("setblock -6 -60 15 minecraft:poppy");
+    }
+
+    private static void plantTree(TestServerContext server, int x, int y, int z, String log, String leaves) {
+        server.runCommand("fill " + (x - 2) + " " + (y + 3) + " " + (z - 2) + " " + (x + 2) + " " + (y + 4) + " " + (z + 2) + " " + leaves);
+        server.runCommand("setblock " + (x - 2) + " " + (y + 4) + " " + (z - 2) + " minecraft:air");
+        server.runCommand("setblock " + (x + 2) + " " + (y + 4) + " " + (z - 2) + " minecraft:air");
+        server.runCommand("setblock " + (x - 2) + " " + (y + 4) + " " + (z + 2) + " minecraft:air");
+        server.runCommand("setblock " + (x + 2) + " " + (y + 4) + " " + (z + 2) + " minecraft:air");
+        server.runCommand("fill " + (x - 1) + " " + (y + 5) + " " + (z - 1) + " " + (x + 1) + " " + (y + 5) + " " + (z + 1) + " " + leaves);
+        server.runCommand("setblock " + (x - 1) + " " + (y + 5) + " " + (z - 1) + " minecraft:air");
+        server.runCommand("setblock " + (x + 1) + " " + (y + 5) + " " + (z - 1) + " minecraft:air");
+        server.runCommand("fill " + (x - 1) + " " + (y + 6) + " " + z + " " + (x + 1) + " " + (y + 6) + " " + z + " " + leaves);
+        server.runCommand("fill " + x + " " + (y + 6) + " " + (z - 1) + " " + x + " " + (y + 6) + " " + (z + 1) + " " + leaves);
+        server.runCommand("fill " + x + " " + y + " " + z + " " + x + " " + (y + 4) + " " + z + " " + log);
     }
 
     // --- Helpers --------------------------------------------------------------------------------
@@ -232,6 +361,18 @@ public final class MountHudGameTest implements FabricClientGameTest {
         server.runCommand("xp set @a 7 levels");
         server.runCommand("xp add @a 20 points");
         server.runCommand("effect give @a minecraft:hunger 2 200 true");
+        // Populate hotbar slots 1..8 and inventory early so recipe unlock toasts finish before screenshots
+        server.runCommand("item replace entity @a hotbar.1 with minecraft:diamond_sword");
+        server.runCommand("item replace entity @a hotbar.2 with minecraft:bow");
+        server.runCommand("item replace entity @a hotbar.3 with minecraft:golden_carrot 14");
+        server.runCommand("item replace entity @a hotbar.4 with minecraft:cooked_beef 24");
+        server.runCommand("item replace entity @a hotbar.5 with minecraft:lead 2");
+        server.runCommand("item replace entity @a hotbar.6 with minecraft:apple 8");
+        server.runCommand("item replace entity @a hotbar.7 with minecraft:saddle");
+        server.runCommand("item replace entity @a hotbar.8 with minecraft:lantern 4");
+        server.runCommand("item replace entity @a inventory.0 with minecraft:arrow 48");
+        server.runCommand("item replace entity @a inventory.1 with minecraft:wheat 19");
+        server.runCommand("item replace entity @a inventory.2 with minecraft:oak_planks 32");
         context.waitFor(mc -> mc.player.getVehicle() != null, 200);
         context.waitTicks(80);
         // Look over the horse's head, so the HUD stands on the sky
