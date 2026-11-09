@@ -69,8 +69,8 @@ jobs:
               echo "::error file=${list}::${file}: the title must be 1 - 100 characters"
               exit 1
             fi
-            if [ "$(wc -c < "${file}")" -gt 5242880 ]; then
-              echo "::error file=${list}::${file} is over 5 MiB, Modrinth refuses it"
+            if [ "$(wc -c < "${file}")" -gt 2097152 ]; then
+              echo "::error file=${list}::${file} is over 2 MiB, CurseForge refuses it"
               exit 1
             fi
           done

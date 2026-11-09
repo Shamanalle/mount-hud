@@ -2,7 +2,7 @@
   {
     "file": "docs/images/above-hunger.png",
     "title": "Mount hearts above hunger and experience bar while riding",
-    "description": "The mount's hearts sit one row above the hunger bar while your experience bar and level stay visible.",
+    "description": "The mount's hearts and stats sit above the hunger bar while your experience bar and level stay visible.",
     "featured": true
   },
   {

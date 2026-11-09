@@ -43,7 +43,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
             + "{id:\"minecraft:jump_strength\",base:0.7d}],"
             // The saddle is an equipment slot from 1.21.5 on and SaddleItem before; each version skips the other
             + "SaddleItem:{id:\"minecraft:saddle\",count:1},equipment:{saddle:{id:\"minecraft:saddle\",count:1}}}";
-    private static final int STORE_GUI_SCALE = 6;
+    private static final int STORE_GUI_SCALE = 3;
 
     private final List<String> failures = new ArrayList<>();
 
@@ -198,7 +198,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
     private void storeScreenshots(ClientGameTestContext context, TestServerContext server) {
         context.runOnClient(mc -> mc.options.renderDistance().set(8));
         buildStoreScene(server);
-        context.getInput().resizeWindow(3840, 2160);
+        context.getInput().resizeWindow(1920, 1080);
         context.runOnClient(mc -> {
             TestCompat.guiScale(mc, STORE_GUI_SCALE);
             mc.player.setYRot(0);
