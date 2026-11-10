@@ -52,4 +52,29 @@ class MountStatsTest {
         assertFalse(fullPig.hasJump());
         assertEquals(5.0, MountStats.hearts(10), 1e-6);
     }
+
+    @Test
+    void normalizesStatRatiosIntoUnitInterval() {
+        MountStats hurtHorse = new MountStats(23f, 30f, 0.225, 0.7);
+        assertEquals(23.0 / 30.0, hurtHorse.healthRatio(), 1e-6);
+        assertEquals(1.0, hurtHorse.maxHealthRatio(), 1e-6);
+        assertEquals(0.225 / 0.3375, hurtHorse.speedRatio(), 1e-6);
+        assertTrue(hurtHorse.jumpRatio() > 0.5 && hurtHorse.jumpRatio() < 0.6);
+
+        MountStats weakHorse = new MountStats(15f, 15f, 0.1125, 0.4);
+        assertEquals(0.5, weakHorse.healthRatio(), 1e-6);
+        assertEquals(0.5, weakHorse.maxHealthRatio(), 1e-6);
+
+        MountStats boostedCamel = new MountStats(32f, 32f, 0.5, 1.4);
+        assertEquals(1.0, boostedCamel.healthRatio(), 1e-6);
+        assertEquals(1.0, boostedCamel.maxHealthRatio(), 1e-6);
+        assertEquals(1.0, boostedCamel.speedRatio(), 1e-6);
+        assertEquals(1.0, boostedCamel.jumpRatio(), 1e-6);
+
+        MountStats invalid = new MountStats(-5f, Float.NaN, Double.NaN, -1.0);
+        assertEquals(0.0, invalid.healthRatio());
+        assertEquals(0.0, invalid.maxHealthRatio());
+        assertEquals(0.0, invalid.speedRatio());
+        assertEquals(0.0, invalid.jumpRatio());
+    }
 }

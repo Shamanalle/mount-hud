@@ -1,5 +1,4 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Paramètres de Mount HUD",
   "mounthud.settings.reset": "Réinitialiser",
   "mounthud.option.enabled": "Mount HUD",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "Inventaire",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD et inventaire",
   "mounthud.option.mount_stats.off": "Non",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s bl/s",
   "mounthud.stats.jump": "%s bl"
 }

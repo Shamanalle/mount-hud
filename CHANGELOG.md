@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 *Все заметные изменения проекта описываются в этом файле. Каждая версия описана сначала на английском, затем на русском.*
 
+## [1.1.0] - 2026-11-10
+
+### English
+
+#### Added
+- A live riding HUD preview on the settings screen that updates right away as you toggle each option.
+- Icons and rating bars for health, speed and jump height in the horse inventory screen, and a shaded backdrop behind the mount's stats on the HUD.
+
+#### Fixed
+- Mount hearts and HUD stats now follow the HUD offset of the Raised mod on NeoForge as well.
+- Small fixes.
+
+### Русский
+
+#### Добавлено
+- Живой предпросмотр HUD на экране настроек, который сразу обновляется при переключении каждой настройки.
+- Иконки и шкалы здоровья, скорости и высоты прыжка в окне инвентаря лошади, а также затемнённая подложка под строкой характеристик на экране при езде.
+
+#### Исправлено
+- Сердца и характеристики животного теперь смещаются вместе с интерфейсом мода Raised и на NeoForge.
+- Мелкие исправления.
+
 ## [1.0.0] - 2026-04-20
 
 ### English

@@ -20,7 +20,7 @@ cd mount-hud
 ./gradlew :fabric:runClient -Pminecraft_version=26.3  # a dev client; :neoforge / :forge likewise
 ```
 
-The in-game test (Fabric, Minecraft 1.21.4 and newer) starts the game, puts the player on a horse and checks the HUD in every setting, with screenshots in `fabric/build/run/clientGameTest/screenshots` (the `store_*` ones are 3840x2160, for the project pages). On Linux without a display, run it under `xvfb-run -a -s "-screen 0 3840x2160x24"`:
+The in-game test (Fabric, Minecraft 1.21.4 and newer) starts the game, puts the player on a horse and checks the HUD in every setting, with screenshots in `fabric/build/run/clientGameTest/screenshots` (the `store_*` ones are 1920x1080, for the project pages). On Linux without a display, run it under `xvfb-run -a -s "-screen 0 3840x2160x24"`:
 
 ```bash
 ./gradlew :fabric:runClientGameTest -Pminecraft_version=1.21.4
@@ -71,18 +71,18 @@ Set once in *Settings → Secrets and variables → Actions → New repository s
 
 | Secret | Where to create it | Permissions |
 |---|---|---|
-| `MODRINTH_TOKEN` | Modrinth → *Settings → Personal access tokens* | *Create versions*, *Read projects*, *Write versions* (lets *Sync release notes* update the changelog of published versions), *Write projects* (lets *Modrinth page* upload the description, summary and gallery) |
 | `CURSEFORGE_TOKEN` | CurseForge → *Account → API tokens* | an upload token (CurseForge has no scopes) |
 | `REPO_ADMIN_TOKEN` | GitHub → *Settings → Developer settings → Personal access tokens → Fine-grained tokens* | *Repository access*: only this repository; *Repository permissions → Administration*: *Read and write*. Nothing else |
+| `MODRINTH_TOKEN` *(optional)* | Modrinth → *Settings → Personal access tokens* | only needed if a Modrinth project ID is later configured in `.github/publish.json` |
 
-The Modrinth and CurseForge project ids go into `.github/publish.json` once the projects exist (Modrinth: *Project ID* from the project's menu; CurseForge: the *Project ID* number on the project page).
+The CurseForge project ID lives in `.github/publish.json` (CurseForge: the *Project ID* number on the project page).
 
 ### Pull requests
 
 1. Branch off `main` (`feature/…`, `fix/…`).
 2. Run `./gradlew :common:test` and build the versions your change touches.
 3. Describe what changed and how you tested it in game (Minecraft and loader versions, which mounts).
-4. Add an entry to `CHANGELOG.md` under an *Unreleased* section, in English and in Russian. The changelog becomes the release notes on Modrinth and CurseForge: short plain bullets under Added / Changed / Fixed about what players notice, no internals.
+4. Add an entry to `CHANGELOG.md` under an *Unreleased* section, in English and in Russian. The changelog becomes the release notes on GitHub and CurseForge: short plain bullets under Added / Changed / Fixed about what players notice, no internals.
 
 ---
 
@@ -102,7 +102,7 @@ cd mount-hud
 ./gradlew :fabric:runClient -Pminecraft_version=26.3  # клиент для разработки; так же :neoforge / :forge
 ```
 
-Игровой тест (Fabric, Minecraft 1.21.4 и новее) запускает игру, сажает игрока на лошадь и проверяет HUD при каждой настройке; скриншоты в `fabric/build/run/clientGameTest/screenshots` (`store_*` — 3840x2160, для страниц проекта). На Linux без дисплея запускайте его через `xvfb-run -a -s "-screen 0 3840x2160x24"`:
+Игровой тест (Fabric, Minecraft 1.21.4 и новее) запускает игру, сажает игрока на лошадь и проверяет HUD при каждой настройке; скриншоты в `fabric/build/run/clientGameTest/screenshots` (`store_*` — 1920x1080, для страниц проекта). На Linux без дисплея запускайте его через `xvfb-run -a -s "-screen 0 3840x2160x24"`:
 
 ```bash
 ./gradlew :fabric:runClientGameTest -Pminecraft_version=1.21.4
@@ -153,15 +153,15 @@ README — это два файла: `README.md` на английском и `R
 
 | Секрет | Где создать | Права |
 |---|---|---|
-| `MODRINTH_TOKEN` | Modrinth → *Settings → Personal access tokens* | *Create versions*, *Read projects*, *Write versions* (чтобы *Sync release notes* обновлял описание вышедших версий), *Write projects* (чтобы *Modrinth page* выкладывал описание, summary и галерею) |
 | `CURSEFORGE_TOKEN` | CurseForge → *Account → API tokens* | токен для загрузки (прав у CurseForge нет) |
 | `REPO_ADMIN_TOKEN` | GitHub → *Settings → Developer settings → Personal access tokens → Fine-grained tokens* | *Repository access*: только этот репозиторий; *Repository permissions → Administration*: *Read and write*. Больше ничего |
+| `MODRINTH_TOKEN` *(необязателен)* | Modrinth → *Settings → Personal access tokens* | нужен только если в `.github/publish.json` позже будет указан ID проекта Modrinth |
 
-ID проектов Modrinth и CurseForge вписываются в `.github/publish.json`, когда проекты созданы (Modrinth — *Project ID* из меню проекта; CurseForge — число *Project ID* на странице проекта).
+ID проекта CurseForge записан в `.github/publish.json` (число *Project ID* на странице проекта).
 
 ### Pull request
 
 1. Создайте ветку от `main` (`feature/…`, `fix/…`).
 2. Запустите `./gradlew :common:test` и соберите версии, которых касается изменение.
 3. Опишите, что изменилось и как вы проверяли в игре (версии Minecraft и загрузчика, на каких животных).
-4. Добавьте запись в `CHANGELOG.md` в раздел *Unreleased* на английском и на русском. Журнал изменений становится описанием версии на Modrinth и CurseForge: короткие простые пункты в разделах «Добавлено / Изменено / Исправлено» о том, что заметят игроки, без внутреннего устройства.
+4. Добавьте запись в `CHANGELOG.md` в раздел *Unreleased* на английском и на русском. Журнал изменений становится описанием версии на GitHub и CurseForge: короткие простые пункты в разделах «Добавлено / Изменено / Исправлено» о том, что заметят игроки, без внутреннего устройства.

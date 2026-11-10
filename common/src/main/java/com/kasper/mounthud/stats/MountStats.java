@@ -16,6 +16,12 @@ public final class MountStats {
     public static final double GRAVITY = 0.08;
     /** Vertical velocity multiplier applied in both {@code LivingEntity.travel} and {@code LivingEntity.aiStep}. */
     public static final double AIR_DRAG = 0.98;
+    /** Maximum health of a natural vanilla horse (30 HP = 15 hearts), used to scale health bars. */
+    public static final double MAX_HORSE_HEALTH = 30.0;
+    /** Fastest natural vanilla horse movement_speed (0.3375) in blocks per second (~14.57 bl/s). */
+    public static final double MAX_HORSE_SPEED = 0.3375 * SPEED_TO_BLOCKS_PER_SECOND;
+    /** Highest natural vanilla horse jump_strength (1.0) peak height in blocks (~5.30 bl). */
+    public static final double MAX_HORSE_JUMP = jumpHeight(1.0);
 
     public final float health;
     public final float maxHealth;
@@ -83,6 +89,35 @@ public final class MountStats {
     /** Jump height in blocks rounded to one decimal place (for example {@code "2.9"}). */
     public String jumpText() {
         return formatOneDecimal(jumpHeight);
+    }
+
+    /** Current health normalized to {@code [0, 1]} against {@code max(30, maxHealth)} for rating bars. */
+    public double healthRatio() {
+        double cap = Math.max(MAX_HORSE_HEALTH, maxHealth);
+        return clamp01(Math.min(health, maxHealth) / cap);
+    }
+
+    /** Maximum health potential normalized to {@code [0, 1]} against {@code max(30, maxHealth)} for rating bars. */
+    public double maxHealthRatio() {
+        double cap = Math.max(MAX_HORSE_HEALTH, maxHealth);
+        return clamp01(maxHealth / cap);
+    }
+
+    /** Speed normalized to {@code [0, 1]} against the fastest natural vanilla horse (~14.57 bl/s). */
+    public double speedRatio() {
+        return clamp01(blocksPerSecond / MAX_HORSE_SPEED);
+    }
+
+    /** Jump height normalized to {@code [0, 1]} against the highest natural vanilla horse (~5.30 bl). */
+    public double jumpRatio() {
+        return clamp01(jumpHeight / MAX_HORSE_JUMP);
+    }
+
+    private static double clamp01(double value) {
+        if (value <= 0 || Double.isNaN(value) || Double.isInfinite(value)) {
+            return 0;
+        }
+        return value >= 1 ? 1 : value;
     }
 
     public static String formatOneDecimal(double value) {

@@ -1,11 +1,10 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Ajustes de Mount HUD",
   "mounthud.settings.reset": "Restablecer",
   "mounthud.option.enabled": "Mount HUD",
   "mounthud.option.enabled.tooltip": "Desactivado devuelve la interfaz original.",
   "mounthud.option.hunger_while_riding": "Hambre al montar",
-  "mounthud.option.hunger_while_riding.tooltip": "Mantiene la barra de hambre al montar un caballo, cerdo o camello junto con los corazones de la montura.",
+  "mounthud.option.hunger_while_riding.tooltip": "Mantiene la barra de hambre al montar un caballo, cerdo, camello o lavagante junto con los corazones de la montura.",
   "mounthud.option.hearts_position": "Corazones de la montura",
   "mounthud.option.hearts_position.tooltip": "Dónde van los corazones de la montura mientras se ve la barra de hambre.",
   "mounthud.option.hearts_position.above_hunger": "Sobre el hambre",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "En inventario",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD e inventario",
   "mounthud.option.mount_stats.off": "No",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s bl/s",
   "mounthud.stats.jump": "%s bl"
 }

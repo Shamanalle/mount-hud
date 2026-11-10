@@ -41,21 +41,21 @@ jobs:
               echo "Skipping ${tag}: no CHANGELOG.md section"
               continue
             fi
-            gh release edit "${tag}" --title "${tag}" --notes-file notes.md
+            gh release edit "${tag}" --notes-file notes.md
             echo "Updated ${tag}"
           done
 
-      # The same notes on Modrinth, for every version there whose number starts with a CHANGELOG
-      # version (e.g. 0.1.0+mc1.21.x). Needs the MODRINTH_TOKEN secret with the "Write versions"
-      # scope; skipped when the project id or the token is missing.
-      - name: Update Modrinth versions
+      - name: Update Modrinth versions (if configured)
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           TAG: ${{ inputs.tag }}
         run: |
           project=$(jq -r '.modrinth // ""' .github/publish.json)
-          if [ -z "${project}" ] || [ -z "${MODRINTH_TOKEN}" ]; then
-            echo "::warning::Modrinth skipped: no project id in .github/publish.json or no MODRINTH_TOKEN"
+          if [ -z "${project}" ]; then
+            exit 0
+          fi
+          if [ -z "${MODRINTH_TOKEN}" ]; then
+            echo "::warning::Modrinth skipped: MODRINTH_TOKEN is not set"
             exit 0
           fi
           api=https://api.modrinth.com/v2

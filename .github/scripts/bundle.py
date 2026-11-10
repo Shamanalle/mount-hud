@@ -14,6 +14,9 @@ Usage:
   bundle.py games
       Prints the game starts as JSON, one per loader and Minecraft version of every bundle, for the start-up
       check of the bundled jars.
+  bundle.py verify <output folder>
+      Checks that every bundled jar in <output folder> has valid class headers, bootstrap classes, variants
+      mapping, relocated entrypoints and mixin classes.
 """
 import json
 import re
@@ -31,11 +34,11 @@ ROOT = release_groups.ROOT
 BOOT = ROOT / 'boot' / 'src'
 BOOT_PACKAGE = 'com/kasper/mounthud/boot/'
 PREFIX = b'com/kasper/mounthud/'
-RELOCATED = re.compile(rb'(com/kasper/mounthud/)')
+RELOCATED = re.compile(rb'com/kasper/mounthud/')
 MOD_ANNOTATIONS = {b'Lnet/minecraftforge/fml/common/Mod;', b'Lnet/neoforged/fml/common/Mod;'}
 # Unknown annotation types are ignored, so the variants' entry classes lose @Mod and FML only sees the bootstrap.
 MOD_REPLACEMENT = b'Lcom/kasper/mounthud/boot/VariantEntry;'
-CONFIGS = {'mounthud.mixins.json', 'mounthud.neoforge.mixins.json'}
+CONFIGS = {'mounthud.mixins.json'}
 METADATA = release_groups.METADATA | CONFIGS
 # Fixed entry time, so the same inputs give the same jar.
 TIME = (2020, 1, 1, 0, 0, 0)
@@ -118,7 +121,7 @@ def relocate_class(data, variant, max_major=None):
         if tag == 1:
             length = struct.unpack('>H', data[pos + 1:pos + 3])[0]
             text = data[pos + 3:pos + 3 + length]
-            text = RELOCATED.sub(lambda match: target + match.group(1) if match.group(1) != PREFIX else target, text)
+            text = RELOCATED.sub(target, text)
             if text in MOD_ANNOTATIONS:
                 text = MOD_REPLACEMENT
             out += bytes([1]) + struct.pack('>H', len(text)) + text
@@ -403,6 +406,47 @@ def games():
     print(json.dumps(result))
 
 
+def verify(output):
+    """Checks that every bundled jar in output has its bootstrap, relocated variants and mixin classes intact."""
+    check_coverage()
+    folder = Path(output)
+    mod_ver = mod_version()
+    for loaders, oldest, newest in bundles():
+        path = folder / jar_name(mod_ver, loaders, oldest, newest)
+        if not path.is_file():
+            sys.exit(f'missing bundled jar: {path}')
+        with zipfile.ZipFile(path) as archive:
+            names = set(archive.namelist())
+            for req in ('META-INF/MANIFEST.MF', f'{BOOT_PACKAGE}Variants.class',
+                        f'{BOOT_PACKAGE}VariantMixinPlugin.class', f'{BOOT_PACKAGE}variants.properties'):
+                if req not in names:
+                    sys.exit(f'{path.name}: missing {req}')
+            for name in names:
+                if name.endswith('.class') and archive.read(name)[:4] != b'\xca\xfe\xba\xbe':
+                    sys.exit(f'{path.name}: invalid class header in {name}')
+            props = {}
+            for line in archive.read(f'{BOOT_PACKAGE}variants.properties').decode().splitlines():
+                if '=' in line:
+                    k, v = line.split('=', 1)
+                    props[k] = v
+            for loader, versions in variants_of(loaders, oldest, newest):
+                vid = variant_id(loader, versions)
+                for ver in versions:
+                    if props.get(f'{loader}.{ver}') != vid:
+                        sys.exit(f'{path.name}: {loader}.{ver} does not map to {vid}')
+                cfg_name = f'mounthud-{vid}.mixins.json'
+                if cfg_name in names:
+                    pkg = json.loads(archive.read(cfg_name))['package'].replace('.', '/')
+                    for mixin in filter(None, props.get(f'{vid}.mixins', '').split(',')):
+                        if f'{pkg}/{mixin}.class' not in names:
+                            sys.exit(f'{path.name}: missing relocated mixin {pkg}/{mixin}.class')
+                for suffix in ('client', 'modmenu', 'entry'):
+                    target_cls = props.get(f'{vid}.{suffix}')
+                    if target_cls and f'com/kasper/mounthud/v/{vid}/{target_cls.replace(".", "/")}.class' not in names:
+                        sys.exit(f'{path.name}: missing entrypoint {target_cls} for {vid}')
+        print(f'verified {path.name}')
+
+
 def main(folder, output):
     check_coverage()
     Path(output).mkdir(parents=True, exist_ok=True)
@@ -417,6 +461,8 @@ if __name__ == '__main__':
         print(entries_json())
     elif len(sys.argv) == 2 and sys.argv[1] == 'games':
         games()
+    elif len(sys.argv) == 3 and sys.argv[1] == 'verify':
+        verify(sys.argv[2])
     elif len(sys.argv) == 3:
         main(sys.argv[1], sys.argv[2])
     else:

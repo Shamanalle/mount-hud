@@ -453,7 +453,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
         static Region horseStatsPanel(net.minecraft.client.Minecraft mc) {
             int leftPos = (mc.getWindow().getGuiScaledWidth() - 176) / 2;
             int topPos = (mc.getWindow().getGuiScaledHeight() - 166) / 2;
-            return of(mc, leftPos + 83, topPos + 21, 52, 36);
+            return of(mc, leftPos + 80, topPos + 18, 88, 52);
         }
 
         private static Region of(net.minecraft.client.Minecraft mc, int x, int y, int width, int height) {

@@ -1,5 +1,4 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Налаштування Mount HUD",
   "mounthud.settings.reset": "Скинути",
   "mounthud.option.enabled": "Mount HUD",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "В інвентарі",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD та інвентар",
   "mounthud.option.mount_stats.off": "Вимк",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s бл/с",
   "mounthud.stats.jump": "%s бл"
 }

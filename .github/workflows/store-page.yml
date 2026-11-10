@@ -1,20 +1,16 @@
-name: Modrinth page
+name: Check store page & gallery
 
-# Uploads docs/modrinth.md as the Modrinth project page and the English summary from
-# docs/store-description.md as its short description, so the page is edited with a commit.
-# The gallery is docs/gallery.json (file, title, description, featured; the order is the list's order):
-# each picture is uploaded to the project gallery, replacing the one with the same title (a picture
-# Modrinth already holds, answered as a duplicate, is left as it is with a warning). Pictures
-# added on the site by hand keep their place. CurseForge accepts 2 MiB per picture, Modrinth 5 MiB.
-# Needs the MODRINTH_TOKEN secret with the "Write projects" scope; without it the upload is skipped
-# with a warning. Pull requests only check that the page, the summary and the gallery can be read.
+# Validates docs/project-page.md, the English summary in docs/store-description.md (<= 250 characters for CurseForge),
+# and docs/gallery.json (every image present, unique titles, and <= 2 MiB for CurseForge).
+# If a Modrinth project id is configured later in .github/publish.json alongside MODRINTH_TOKEN, it also syncs the
+# page and gallery there; when Modrinth is unset, no upload or warning is emitted.
 
 on:
   push:
     branches: [ "main" ]
-    paths: [ "docs/modrinth.md", "docs/store-description.md", "docs/gallery.json", "docs/images/**", ".github/workflows/modrinth-page.yml" ]
+    paths: [ "docs/project-page.md", "docs/store-description.md", "docs/gallery.json", "docs/images/**", ".github/workflows/store-page.yml" ]
   pull_request:
-    paths: [ "docs/modrinth.md", "docs/store-description.md", "docs/gallery.json", "docs/images/**", ".github/workflows/modrinth-page.yml" ]
+    paths: [ "docs/project-page.md", "docs/store-description.md", "docs/gallery.json", "docs/images/**", ".github/workflows/store-page.yml" ]
   workflow_dispatch:
 
 permissions:
@@ -22,32 +18,32 @@ permissions:
 
 jobs:
   page:
-    name: Check and upload
+    name: Validate store page & gallery
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Build the request
+      - name: Validate summary and project page
         run: |
           summary=$(grep -m1 '^\*\*Summary:\*\*' docs/store-description.md | sed 's/^\*\*Summary:\*\* *//')
           if [ -z "${summary}" ]; then
             echo "::error file=docs/store-description.md::No **Summary:** line"
             exit 1
           fi
-          # Modrinth allows 3 - 256 characters in the summary
-          if [ "${#summary}" -gt 256 ]; then
-            echo "::error file=docs/store-description.md::The summary is ${#summary} characters; Modrinth allows 256"
+          # CurseForge allows up to 250 characters in the summary
+          if [ "${#summary}" -gt 250 ]; then
+            echo "::error file=docs/store-description.md::The summary is ${#summary} characters; CurseForge allows 250"
             exit 1
           fi
-          if [ ! -s docs/modrinth.md ]; then
-            echo "::error file=docs/modrinth.md::The page is empty"
+          if [ ! -s docs/project-page.md ]; then
+            echo "::error file=docs/project-page.md::The page is empty"
             exit 1
           fi
-          jq -n --arg description "${summary}" --rawfile body docs/modrinth.md \
+          jq -n --arg description "${summary}" --rawfile body docs/project-page.md \
             '{description: $description, body: $body}' > request.json
-          echo "Summary: ${#summary} characters; page: $(wc -c < docs/modrinth.md) bytes"
+          echo "Summary: ${#summary} characters; page: $(wc -c < docs/project-page.md) bytes"
 
       - name: Check the gallery
         run: |
@@ -76,14 +72,17 @@ jobs:
           done
           echo "Gallery: $(jq length "${list}") pictures"
 
-      - name: Upload to Modrinth
+      - name: Sync Modrinth page (if configured)
         if: github.event_name != 'pull_request'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
           project=$(jq -r '.modrinth // ""' .github/publish.json)
-          if [ -z "${project}" ] || [ -z "${MODRINTH_TOKEN}" ]; then
-            echo "::warning::Modrinth page skipped: set \"modrinth\" in .github/publish.json and the MODRINTH_TOKEN secret"
+          if [ -z "${project}" ]; then
+            exit 0
+          fi
+          if [ -z "${MODRINTH_TOKEN}" ]; then
+            echo "::warning::Modrinth page skipped: MODRINTH_TOKEN secret is not set"
             exit 0
           fi
           status=$(curl -sS -o response.txt -w '%{http_code}' -X PATCH \
@@ -104,14 +103,13 @@ jobs:
             exit 1
           fi
 
-      - name: Upload the gallery to Modrinth
+      - name: Sync Modrinth gallery (if configured)
         if: github.event_name != 'pull_request'
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
           project=$(jq -r '.modrinth // ""' .github/publish.json)
           if [ -z "${project}" ] || [ -z "${MODRINTH_TOKEN}" ]; then
-            echo "::warning::Modrinth gallery skipped: set \"modrinth\" in .github/publish.json and the MODRINTH_TOKEN secret"
             exit 0
           fi
           api="https://api.modrinth.com/v2/project/${project}"

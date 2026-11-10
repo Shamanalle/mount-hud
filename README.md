@@ -27,7 +27,7 @@ Mount HUD keeps both:
 
 - **Hunger and the mount's hearts at once.** The mount's hearts go one row above hunger (the air bubbles move up above them), or to the left above your armor, as you choose.
 - **Experience while riding.** The experience bar and level stay visible and turn into the jump bar only while you charge a jump (and while a camel's dash recharges). You can also keep the jump bar all the time, as in vanilla, or never show it.
-- **Mount stats.** Your mount's health, speed in blocks per second and jump height in blocks are shown in the horse inventory screen and, if you turn them on, above the mount's hearts on the HUD while riding.
+- **Mount stats.** Your mount's health, speed in blocks per second and jump height in blocks are shown with rating bars in the horse inventory screen and, if you turn them on, above the mount's hearts on the HUD while riding.
 
 The mod only changes your HUD: it is not needed on the server, and works on any server.
 
@@ -41,7 +41,7 @@ Three files cover every supported loader and Minecraft version:
 
 | File | Loader | Minecraft versions | Notes |
 |---|---|---|---|
-| `mount-hud-fabric-<version>+mc1.16.5-26.3.jar` | Fabric, Quilt | 1.16.5 – 1.21.11, 26.1 – 26.3 | Fabric API is not required; [Mod Menu](https://modrinth.com/mod/modmenu) is optional for the settings screen |
+| `mount-hud-fabric-<version>+mc1.16.5-26.3.jar` | Fabric, Quilt | 1.16.5 – 1.21.11, 26.1 – 26.3 | Fabric API is not required; [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) is optional for the settings screen |
 | `mount-hud-forge-<version>+mc1.17.1-1.20.1.jar` | Forge, NeoForge 1.20.1 | 1.17.1 – 1.20.1 | — |
 | `mount-hud-neoforge-<version>+mc1.20.5-26.3.jar` | NeoForge | 1.20.5 – 1.21.11, 26.1 – 26.3 | — |
 

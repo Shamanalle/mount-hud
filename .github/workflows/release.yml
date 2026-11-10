@@ -3,7 +3,7 @@ name: Publish Release
 # Publishes the release for mod_version from gradle.properties: builds every jar, packs them into the universal
 # jars of versions/bundles.txt, takes the notes from CHANGELOG.md and attaches the bundled jars. Starts either
 # from a pushed tag (vX.Y.Z) or by hand (Actions -> Publish Release -> Run workflow on main), in which case the
-# tag is created too. Then the files go to Modrinth and CurseForge through publish.yml.
+# tag is created too. Then the files go to CurseForge through publish.yml.
 
 on:
   push:
@@ -138,6 +138,7 @@ jobs:
         run: |
           python3 .github/scripts/release_groups.py check dist release-jars
           python3 .github/scripts/bundle.py release-jars bundled-jars
+          python3 .github/scripts/bundle.py verify bundled-jars
           ls -la bundled-jars/
       - name: Release notes from CHANGELOG.md
         run: bash .github/scripts/release-notes.sh "${{ needs.unit.outputs.tag }}" > release_body.md
@@ -154,7 +155,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   stores:
-    name: Modrinth & CurseForge
+    name: CurseForge
     needs: release
     if: ${{ !cancelled() && needs.release.result == 'success' }}
     uses: ./.github/workflows/publish.yml

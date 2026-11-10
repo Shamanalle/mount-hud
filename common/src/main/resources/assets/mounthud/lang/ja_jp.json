@@ -1,5 +1,4 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Mount HUD の設定",
   "mounthud.settings.reset": "初期設定に戻す",
   "mounthud.option.enabled": "Mount HUD",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "インベントリのみ",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD とインベントリ",
   "mounthud.option.mount_stats.off": "オフ",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s m/s",
   "mounthud.stats.jump": "%s m"
 }

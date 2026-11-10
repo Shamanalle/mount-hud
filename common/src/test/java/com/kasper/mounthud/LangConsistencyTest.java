@@ -122,5 +122,9 @@ class LangConsistencyTest {
         Set<String> missing = new TreeSet<>(used);
         missing.removeAll(english);
         assertTrue(missing.isEmpty(), "keys used in code but missing in en_us: " + missing);
+
+        Set<String> unused = new TreeSet<>(english);
+        unused.removeAll(used);
+        assertTrue(unused.isEmpty(), "keys in en_us not used anywhere in code: " + unused);
     }
 }

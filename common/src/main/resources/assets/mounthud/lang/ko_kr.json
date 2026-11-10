@@ -1,5 +1,4 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Mount HUD 설정",
   "mounthud.settings.reset": "기본값으로 초기화",
   "mounthud.option.enabled": "Mount HUD",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "보관함",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD 및 보관함",
   "mounthud.option.mount_stats.off": "끔",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s bl/s",
   "mounthud.stats.jump": "%s bl"
 }

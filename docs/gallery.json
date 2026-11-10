@@ -20,13 +20,13 @@
   {
     "file": "docs/images/inventory.png",
     "title": "Horse stats in the inventory screen",
-    "description": "Your mount's health, speed in blocks per second and jump height in blocks are shown in the horse inventory.",
+    "description": "Your mount's health, speed in blocks per second and jump height in blocks are shown with rating bars in the horse inventory.",
     "featured": false
   },
   {
     "file": "docs/images/settings.png",
-    "title": "Settings screen",
-    "description": "Configure the mount hearts position, jump bar behavior and mount stats display in-game.",
+    "title": "Settings screen with live HUD preview",
+    "description": "Preview and configure the mount hearts position, jump bar behavior and mount stats display in-game.",
     "featured": false
   }
 ]

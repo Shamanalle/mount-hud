@@ -2,6 +2,15 @@ package com.kasper.mounthud.client;
 
 /** The vanilla HUD sprites the mod draws: by name since Minecraft 1.20.2, from icons.png before. */
 public enum HudSprite {
+    HEART_CONTAINER("hud/heart/container", 16, 0),
+    HEART_FULL("hud/heart/full", 52, 0),
+    HEART_HALF("hud/heart/half", 61, 0),
+    ARMOR_EMPTY("hud/armor_empty", 16, 9),
+    ARMOR_FULL("hud/armor_full", 34, 9),
+    FOOD_EMPTY("hud/food_empty", 16, 27),
+    FOOD_HALF("hud/food_half", 61, 27),
+    FOOD_FULL("hud/food_full", 52, 27),
+    AIR("hud/air", 16, 18),
     MOUNT_HEART_CONTAINER("hud/heart/vehicle_container", 52, 9),
     MOUNT_HEART_FULL("hud/heart/vehicle_full", 88, 9),
     MOUNT_HEART_HALF("hud/heart/vehicle_half", 97, 9);

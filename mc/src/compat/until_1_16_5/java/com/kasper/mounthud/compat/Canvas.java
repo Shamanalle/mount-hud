@@ -26,6 +26,10 @@ public final class Canvas {
         return Minecraft.getInstance().getWindow().getGuiScaledHeight();
     }
 
+    public void fill(int x1, int y1, int x2, int y2, int color) {
+        GuiComponent.fill(pose, x1, y1, x2, y2, color);
+    }
+
     /** Draws a 9x9 HUD sprite. */
     public void sprite(HudSprite sprite, int x, int y) {
         RenderSystem.enableBlend();

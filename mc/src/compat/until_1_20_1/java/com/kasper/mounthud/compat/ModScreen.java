@@ -1,7 +1,6 @@
 package com.kasper.mounthud.compat;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -11,13 +10,13 @@ public abstract class ModScreen extends Screen {
         super(title);
     }
 
-    protected final void addTitle(int x, int y, int width, int height) {
-        addRenderableWidget(new StringWidget(x, y, width, height, title, font));
+    protected void draw(Canvas canvas, int mouseX, int mouseY) {
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
+        draw(new Canvas(graphics), mouseX, mouseY);
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 }

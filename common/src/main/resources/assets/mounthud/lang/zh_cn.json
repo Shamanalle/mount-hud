@@ -1,5 +1,4 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Mount HUD 设置",
   "mounthud.settings.reset": "恢复默认",
   "mounthud.option.enabled": "Mount HUD",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "物品栏中",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD 和物品栏",
   "mounthud.option.mount_stats.off": "关闭",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s 格/秒",
   "mounthud.stats.jump": "%s 格"
 }

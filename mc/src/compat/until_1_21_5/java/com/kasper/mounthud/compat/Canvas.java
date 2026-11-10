@@ -30,6 +30,10 @@ public final class Canvas {
         return graphics.guiHeight();
     }
 
+    public void fill(int x1, int y1, int x2, int y2, int color) {
+        graphics.fill(x1, y1, x2, y2, color);
+    }
+
     /** Draws a 9x9 HUD sprite. */
     public void sprite(HudSprite sprite, int x, int y) {
         graphics.blitSprite(RenderType::guiTextured, SPRITES[sprite.ordinal()], x, y, 9, 9);

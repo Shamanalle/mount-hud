@@ -1,5 +1,4 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Настройки Mount HUD",
   "mounthud.settings.reset": "Сбросить",
   "mounthud.option.enabled": "Mount HUD",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "В инвентаре",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD и инвентарь",
   "mounthud.option.mount_stats.off": "Выкл",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s бл/с",
   "mounthud.stats.jump": "%s бл"
 }

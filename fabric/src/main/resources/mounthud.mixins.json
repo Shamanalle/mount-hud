@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.kasper.mounthud.fabric.mixin",
-  "compatibilityLevel": "JAVA_${java_version}",
+  "compatibilityLevel": "JAVA_${mixin_java}",
   "client": [
     "ContainerScreenMixin",
     "HudMixin"

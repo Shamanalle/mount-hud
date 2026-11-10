@@ -1,11 +1,10 @@
 {
-  "mounthud.name": "Mount HUD",
   "mounthud.settings.title": "Mount HUD Ayarları",
   "mounthud.settings.reset": "Varsayılana döndür",
   "mounthud.option.enabled": "Mount HUD",
   "mounthud.option.enabled.tooltip": "Kapalıyken arayüz oyunun kendi hâline döner.",
   "mounthud.option.hunger_while_riding": "Binerken açlık",
-  "mounthud.option.hunger_while_riding.tooltip": "At, domuz veya deveye binerken açlık çubuğunu bineğin canıyla birlikte gösterir.",
+  "mounthud.option.hunger_while_riding.tooltip": "At, domuz, deve veya lavgezere binerken açlık çubuğunu bineğin canıyla birlikte gösterir.",
   "mounthud.option.hearts_position": "Bineğin kalpleri",
   "mounthud.option.hearts_position.tooltip": "Açlık çubuğu görünürken bineğin kalplerinin yeri.",
   "mounthud.option.hearts_position.above_hunger": "Açlığın üstünde",
@@ -20,7 +19,6 @@
   "mounthud.option.mount_stats.inventory": "Envanterde",
   "mounthud.option.mount_stats.hud_and_inventory": "HUD ve envanter",
   "mounthud.option.mount_stats.off": "Kapalı",
-  "mounthud.stats.health": "♥ %s",
   "mounthud.stats.speed": "%s bl/sn",
   "mounthud.stats.jump": "%s bl"
 }
