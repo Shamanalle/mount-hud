@@ -5,7 +5,7 @@ name: Modrinth page
 # The gallery is docs/gallery.json (file, title, description, featured; the order is the list's order):
 # each picture is uploaded to the project gallery, replacing the one with the same title (a picture
 # Modrinth already holds, answered as a duplicate, is left as it is with a warning). Pictures
-# added on the site by hand keep their place. Modrinth accepts 5 MiB per picture.
+# added on the site by hand keep their place. CurseForge accepts 2 MiB per picture, Modrinth 5 MiB.
 # Needs the MODRINTH_TOKEN secret with the "Write projects" scope; without it the upload is skipped
 # with a warning. Pull requests only check that the page, the summary and the gallery can be read.
 

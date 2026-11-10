@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 /**
  * Puts the player on a horse and checks the riding HUD: the mount's hearts above hunger or on the left, the jump
  * bar while charging a jump, the mount's stats in the horse inventory and on the HUD, and the settings screen. Every
- * step leaves a screenshot in build/run/clientGameTest/screenshots; the ones named store_* are 3840x2160, for the
+ * step leaves a screenshot in build/run/clientGameTest/screenshots; the ones named store_* are 1920x1080, for the
  * project pages.
  */
 public final class MountHudGameTest implements FabricClientGameTest {
@@ -194,7 +194,7 @@ public final class MountHudGameTest implements FabricClientGameTest {
         expect(MountHud.settings().equals(new Settings()), "Reset did not restore the default settings");
     }
 
-    /** The pictures for the project pages, 3840x2160 at a large GUI scale so the HUD reads at a glance. */
+    /** The pictures for the project pages, 1920x1080 at a large GUI scale so the HUD reads at a glance. */
     private void storeScreenshots(ClientGameTestContext context, TestServerContext server) {
         context.runOnClient(mc -> mc.options.renderDistance().set(8));
         buildStoreScene(server);
